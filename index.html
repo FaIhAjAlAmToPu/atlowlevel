@@ -1,40 +1,294 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+	<title>reveal.js</title>
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
+	<link rel="stylesheet" href="dist/reset.css">
+	<link rel="stylesheet" href="dist/reveal.css">
+	<link rel="stylesheet" href="dist/theme/black.css">
+
+	<!-- Theme used for syntax highlighted code -->
+	<link rel="stylesheet" href="plugin/highlight/monokai.css">
+</head>
+
+<body>
+	<div class="reveal">
+		<div class="slides">
+			<section>
+				<section>
+					<h3>Basic Components of a Computer System</h3>
+				</section>
+
+				<section>
+					<div style="margin-top: 60px; position: relative; width: 900px; height: 500px; margin: 0 auto;">
+
+						<!-- CPU -->
+						<div class="fragment fade-in"
+							style="position: absolute; top: 40px; left: 100px; width: 150px; height: 70px; border: 2px solid #00bfff; background: rgba(0,191,255,0.2); display: flex; align-items: center; justify-content: center;">
+							CPU
+						</div>
+
+						<!-- Memory -->
+						<div class="fragment fade-in"
+							style="position: absolute; top: 40px; right: 20px; width: 150px; height: 70px; border: 2px solid #ff9800; background: rgba(255,152,0,0.2); display: flex; align-items: center; justify-content: center;">
+							Memory
+						</div>
+
+						<!-- I/O -->
+						<div class="fragment fade-in"
+							style="position: absolute; bottom: 00px; left: 370px; width: 160px; height: 70px; border: 2px solid #4caf50; background: rgba(76,175,80,0.2); display: flex; align-items: center; justify-content: center;">
+							I/O
+						</div>
+
+						<!-- Interconnect (Bus System) -->
+						<div class="fragment fade-in"
+							style="position: absolute; top: 150px; left: 250px; width: 400px; height: 200px; border-radius: 50%; border: 2px solid #888; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+							<b>Interconnect</b><br><span style="font-size:0.8em;">(System Bus)</span>
+						</div>
+
+						<!-- Connecting Lines -->
+						<svg class="fragment fade-in" width="900" height="500" style="position:absolute;top:0;left:0;">
+							<!-- CPU to Interconnect -->
+							<line x1="175" y1="75" x2="450" y2="250" stroke="white" stroke-width="2" />
+
+							<!-- Memory to Interconnect -->
+							<line x1="805" y1="75" x2="450" y2="250" stroke="white" stroke-width="2" />
+
+							<!-- I/O to Interconnect -->
+							<line x1="450" y1="465" x2="450" y2="250" stroke="white" stroke-width="2" />
+						</svg>
+
+					</div>
+
+					<p class="fragment fade-up" style="margin-top: 50px; font-size: 0.9em;">
+						A computer system consists of <b>CPU</b>, <b>Memory</b>, and <b>Input/Output</b> devices, all
+						connected by an <b>Interconnect (System Bus)</b>.
+					</p>
+				</section>
+
+				<!-- Explanation -->
+				<section>
+					<h3>Component Roles</h3>
+					<ul>
+						<li class="fragment fade-in"><b>CPU:</b> Executes instructions and controls operations.</li>
+						<li class="fragment fade-in"><b>Memory:</b> Stores programs and data.</li>
+						<li class="fragment fade-in"><b>Input/Output:</b> Communicates with external devices.</li>
+						<li class="fragment fade-in"><b>Interconnect (Bus):</b> Transfers data and control signals
+							between components.</li>
+					</ul>
+					<p class="fragment fade-up" style="color:#0dcaf0;margin-top:15px;">
+						Together, these form the backbone of all computer operations.
+					</p>
+				</section>
+			</section>
+
+			<section>
+				<section>
+					<h3>Instruction Execution Cycle</h3>
+
+					<div style="margin-top: 40px; position: relative; width: 900px; height: 180px; margin: 0 auto;">
+
+						<!-- Timeline Arrow -->
+						<div
+							style="position: absolute; top: 110px; left: 0; width: 1020px; height: 2px; background: white;">
+						</div>
+						<div
+							style="position: absolute; top: 104px; left: 1020px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 10px solid white;">
+						</div>
+						<div style="position: absolute; top: 125px; left: 500px; font-size: 0.9em;">time →</div>
+
+						<!-- Instruction Boxes (spaced properly) -->
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 0; width: 120px; height: 60px; border: 2px solid white; background: rgba(0,123,255,0.3); display: flex; align-items: center; justify-content: center;">
+							Fetch</div>
+
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 140px; width: 140px; height: 60px; border: 2px solid white; background: rgba(255,165,0,0.3); display: flex; align-items: center; justify-content: center;">
+							Decode</div>
+
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 300px; width: 150px; height: 60px; border: 2px solid white; background: rgba(50,205,50,0.3); display: flex; align-items: center; justify-content: center;">
+							Execute</div>
+
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 470px; width: 120px; height: 60px; border: 2px solid white; background: rgba(0,123,255,0.3); display: flex; align-items: center; justify-content: center;">
+							Fetch</div>
+
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 610px; width: 140px; height: 60px; border: 2px solid white; background: rgba(255,165,0,0.3); display: flex; align-items: center; justify-content: center;">
+							Decode</div>
+
+						<div class="fragment"
+							style="position: absolute; top: 30px; left: 770px; width: 150px; height: 60px; border: 2px solid white; background: rgba(50,205,50,0.3); display: flex; align-items: center; justify-content: center;">
+							Execute</div>
+
+						<!-- Continuation Dots -->
+						<div class="fragment fade-in"
+							style="position: absolute; top: 10px; left: 950px; font-size: 2em;">
+							...</div>
+					</div>
+
+					<p class="fragment fade-in" style="margin-top: 120px; font-size: 0.9em;">
+						Each instruction passes through <b>Fetch → Decode → Execute</b> stages repeatedly.<br>
+						This continuous process is known as the <b>Instruction Execution Cycle</b>.
+					</p>
+				</section>
+				<!-- FETCH -->
+				<section data-auto-animate>
+					<h3>Fetch Phase</h3>
+					<p class="fragment fade-in"><b>Goal:</b> Get the next instruction from memory</p>
+					<ul style="font-size:0.95em;">
+						<li class="fragment fade-in">Address placed on <b>Address Bus</b></li>
+						<li class="fragment fade-in">Memory <b>Read</b> signal activated</li>
+						<li class="fragment fade-in">Memory sends instruction via <b>Data Bus</b></li>
+						<li class="fragment fade-in">CPU stores it in the <b>Instruction Register</b></li>
+					</ul>
+					<p class="fragment fade-up" style="color:#0dcaf0;">🕐 Access Time → Delay to fetch data</p>
+				</section>
+
+				<!-- DECODE -->
+				<section data-auto-animate>
+					<h3>Decode Phase</h3>
+					<p class="fragment fade-in"><b>Goal:</b> Understand what to do</p>
+					<ul style="font-size:0.95em;">
+						<li class="fragment fade-in"><b>Control Unit</b> interprets the binary instruction</li>
+						<li class="fragment fade-in">Extracts <b>Opcode</b> and <b>Operands</b></li>
+						<li class="fragment fade-in">Prepares signals for the next step</li>
+					</ul>
+					<p class="fragment fade-up" style="color:#ffc107;">🔍 Decode → Identify operation + data</p>
+				</section>
+
+				<!-- EXECUTE -->
+				<section data-auto-animate>
+					<h3>Execute Phase</h3>
+					<p class="fragment fade-in"><b>Goal:</b> Perform the operation</p>
+					<ul style="font-size:0.95em;">
+						<li class="fragment fade-in"><b>ALU</b> performs arithmetic or logic tasks</li>
+						<li class="fragment fade-in"><b>Control Circuits</b> manage timing and signals</li>
+						<li class="fragment fade-in">Result → stored in <b>Register</b> or <b>Memory</b></li>
+					</ul>
+					<p class="fragment fade-up" style="color:#28a745;">⚙️ Execute → Action happens!</p>
+				</section>
+
+				<!-- CACHE -->
+				<section data-auto-animate>
+					<h3>Cache Memory</h3>
+					<ul style="font-size:0.95em;">
+						<li class="fragment fade-in"><b>Cache</b> = high-speed memory close to CPU</li>
+						<li class="fragment fade-in">Stores recently used <b>instructions</b> & <b>data</b></li>
+						<li class="fragment fade-in">Reduces access delay from main memory</li>
+						<li class="fragment fade-in">Boosts <b>CPU performance</b></li>
+					</ul>
+					<p class="fragment fade-up" style="color:#20c997;">⚡ Faster fetch → faster execution</p>
+				</section>
+
+				<!-- SUMMARY -->
+				<section>
+					<h3>Cycle Recap</h3>
+					<div style="display:flex; justify-content:center; align-items:center; gap:20px;">
+						<div class="fragment fade-in"
+							style="padding:15px 25px; border:2px solid #007bff; background:rgba(0,123,255,0.3); border-radius:10px;">
+							Fetch</div>
+						<div class="fragment fade-in"
+							style="padding:15px 25px; border:2px solid #ffa500; background:rgba(255,165,0,0.3); border-radius:10px;">
+							Decode</div>
+						<div class="fragment fade-in"
+							style="padding:15px 25px; border:2px solid #28a745; background:rgba(40,167,69,0.3); border-radius:10px;">
+							Execute</div>
+						<div class="fragment fade-in" style="font-size:2em;">→ ...</div>
+					</div>
+					<p class="fragment fade-up" style="margin-top:30px; font-size:0.9em;">
+						<b>Instruction Cycle:</b> Repeats endlessly — Fetch, Decode, Execute.<br>
+						<b>Cache</b> keeps it all running fast ⚡
+					</p>
+				</section>
+			</section>
+
+			<section>
+				<h3>Basic Computer System Components</h3>
+				<div style="position: relative; width: 600px; height: 400px; margin: 0 auto;">
+					<!-- Interconnect -->
+					<div class="fragment" style="
+        position: absolute;
+        top: 150px; left: 200px;
+        width: 200px; height: 200px;
+        background: rgba(100,100,100,0.4);
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+        color: white;
+      ">
+						Interconnect
+					</div>
+
+					<!-- CPU -->
+					<div class="fragment" style="
+        position: absolute;
+        top: 50px; left: 70px;
+        width: 120px; height: 60px;
+        border: 2px solid white;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+      ">
+						CPU
+					</div>
+
+					<!-- Memory -->
+					<div class="fragment" style="
+        position: absolute;
+        top: 50px; left: 380px;
+        width: 120px; height: 60px;
+        border: 2px solid white;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+      ">
+						Memory
+					</div>
+
+					<!-- Input/Output -->
+					<div class="fragment" style="
+        position: absolute;
+        top: 300px; left: 220px;
+        width: 160px; height: 60px;
+        border: 2px solid white;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold;
+      ">
+						Input/Output
+					</div>
+				</div>
+
+				<p class="fragment fade-in" style="margin-top: 40px; font-size: 0.9em;">
+					The <b>CPU</b>, <b>Memory</b>, and <b>Input/Output</b> units communicate through an
+					<b>Interconnect</b> (bus system).
+				</p>
+			</section>
+			<section>Slide 2</section>
 		</div>
+	</div>
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+
+	<script src="dist/reveal.js"></script>
+	<script src="plugin/notes/notes.js"></script>
+	<script src="plugin/markdown/markdown.js"></script>
+	<script src="plugin/highlight/highlight.js"></script>
+	<script>
+		Reveal.initialize({
+			hash: true,
+			plugins: [RevealMarkdown, RevealHighlight, RevealNotes]
+		});
+		// Custom script to show interconnect circle with fragment
+		Reveal.addEventListener('fragmentshown', function (event) {
+			if (event.fragment.classList.contains('interconnect')) {
+				event.fragment.style.display = 'block';
+			}
+		});
+	</script>
+</body>
+
 </html>
