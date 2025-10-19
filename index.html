@@ -207,67 +207,209 @@
 					</p>
 				</section>
 			</section>
-
 			<section>
-				<h3>Basic Computer System Components</h3>
-				<div style="position: relative; width: 600px; height: 400px; margin: 0 auto;">
-					<!-- Interconnect -->
-					<div class="fragment" style="
-        position: absolute;
-        top: 150px; left: 200px;
-        width: 200px; height: 200px;
-        background: rgba(100,100,100,0.4);
-        border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: bold;
-        color: white;
-      ">
-						Interconnect
-					</div>
+				<!-- Introduction to Address Machines -->
+				<section>
+					<h3>Address Machines</h3>
+					<p class="fragment fade-in" style="font-size:0.9em;">
+						Computer architectures use different instruction formats based on the number of operands, known
+						as <b>address machines</b>.
+					</p>
+					<ul style="font-size:0.95em;">
+						<li class="fragment fade-in">Classified as 3-address, 2-address, 1-address, or 0-address
+							machines.</li>
+						<li class="fragment fade-in">Each type affects how instructions are written and executed in a
+							CPU (e.g., Pentium).</li>
+						<li class="fragment fade-in">We’ll evaluate the expression <code>A * B - C + D/E + F</code> for
+							each type.</li>
+					</ul>
+					<p class="fragment fade-up" style="color:#0dcaf0;margin-top:15px;">
+						🛠️ Understanding address machines helps in compiler design and assembly programming.
+					</p>
+				</section>
 
-					<!-- CPU -->
-					<div class="fragment" style="
-        position: absolute;
-        top: 50px; left: 70px;
-        width: 120px; height: 60px;
-        border: 2px solid white;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: bold;
-      ">
-						CPU
-					</div>
+				<!-- 3-Address Machine Overview -->
+				<section>
+					<h3>3-Address Machine</h3>
+					<p class="fragment fade-in" style="font-size:0.9em;">
+						<b>Architecture Overview:</b> Instructions have three operands:
+						<code>OP Dest, Src1, Src2</code>.
+						Result is stored in a separate register.
+					</p>
+					<ul style="font-size:0.85em;">
+						<li class="fragment fade-in">Common in RISC architectures (e.g., MIPS, emulated in Pentium).
+						</li>
+						<li class="fragment fade-in">Uses registers (e.g., EAX, EBX) for fast computation.</li>
+						<li class="fragment fade-in">Memory variables (e.g., A, B) are loaded into registers first.</li>
+					</ul>
+				</section>
 
-					<!-- Memory -->
-					<div class="fragment" style="
-        position: absolute;
-        top: 50px; left: 380px;
-        width: 120px; height: 60px;
-        border: 2px solid white;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: bold;
-      ">
-						Memory
-					</div>
+				<!-- 3-Address Machine Example -->
+				<section data-auto-animate>
+					<h3>3-Address Machine Example</h3>
+					<pre class="fragment fade-in" style="font-size:0.7em;"><code class="language-asm">
+MOV T1, A
+MOV T2, B
+MUL T3, T1, T2
+MOV T1, C
+SUB T2, T3, T1
+MOV T3, D
+MOV T1, E
+DIV T4, T3, T1
+ADD T3, T2, T4
+MOV T1, F
+ADD T2, T3, T1
+    </code></pre>
+					<p class="fragment fade-up" style="color:#007bff;">⚙️ Result in T2. Uses 4 registers, explicit
+						operands.</p>
+				</section>
 
-					<!-- Input/Output -->
-					<div class="fragment" style="
-        position: absolute;
-        top: 300px; left: 220px;
-        width: 160px; height: 60px;
-        border: 2px solid white;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: bold;
-      ">
-						Input/Output
-					</div>
-				</div>
+				<section>
+					<h3>3-Address Machine Example</h3>
+					<pre class="fragment fade-in" style="font-size:0.7em;"><code class="language-asm">
+lw $t0, A    # Load A from memory into $t0
+lw $t1, B    # Load B from memory into $t1
+mul $t2, $t0, $t1  # Multiply $t0 and $t1, store result in $t2 (A * B)
+lw $t0, C    # Load C from memory into $t0
+sub $t3, $t2, $t0  # Subtract $t0 from $t2, store result in $t3 (A * B - C)
+lw $t0, D    # Load D from memory into $t0
+lw $t1, E    # Load E from memory into $t1
+div $t4, $t0, $t1  # Divide $t0 by $t1, store quotient in $t4 (D / E)
+add $t3, $t3, $t4  # Add $t4 to $t3, store result in $t3 (A * B - C + D/E)
+lw $t0, F    # Load F from memory into $t0
+add $t2, $t3, $t0  # Add $t0 to $t3, store result in $t2 (A * B - C + D/E + F)
+sw $t2, result    # Store final result in memory location 'result'
+</code></pre>
+				</section>
 
-				<p class="fragment fade-in" style="margin-top: 40px; font-size: 0.9em;">
-					The <b>CPU</b>, <b>Memory</b>, and <b>Input/Output</b> units communicate through an
-					<b>Interconnect</b> (bus system).
-				</p>
+				<!-- 2-Address Machine Overview -->
+				<section>
+					<h3>2-Address Machine</h3>
+					<p class="fragment fade-in" style="font-size:0.9em;">
+						<b>Architecture Overview:</b> Instructions have two operands: <code>OP Dest, Src</code>. Result
+						overwrites the destination operand.
+					</p>
+					<ul style="font-size:0.85em;">
+						<li class="fragment fade-in">Common in CISC architectures like Pentium (e.g., x86 MOV, ADD).
+						</li>
+						<li class="fragment fade-in">Requires initial load (MOV) to set up operands.</li>
+						<li class="fragment fade-in">Fewer registers needed, but more instructions.</li>
+					</ul>
+				</section>
+
+				<!-- 2-Address Machine Example -->
+				<section data-auto-animate>
+					<h3>2-Address Machine Example</h3>
+					<pre class="fragment fade-in" style="font-size:0.7em;"><code class="language-asm">
+MOV T1, A
+MUL T1, B
+SUB T1, C
+MOV T2, D
+DIV T2, E
+ADD T1, T2
+ADD T1, F
+    </code></pre>
+					<p class="fragment fade-up" style="color:#ffa500;">⚙️ Result in T1. Reuses registers, overwrites
+						operands.</p>
+				</section>
+
+				<!-- 1-Address Machine Overview -->
+				<section>
+					<h3>1-Address Machine</h3>
+					<p class="fragment fade-in" style="font-size:0.9em;">
+						<b>Architecture Overview:</b> Uses a single accumulator for operations: <code>OP Src</code>.
+						Accumulator holds one operand and result.
+					</p>
+					<ul style="font-size:0.85em;">
+						<li class="fragment fade-in">Seen in early computers, emulated in Pentium via EAX.</li>
+						<li class="fragment fade-in">Operations like LOAD, STORE manage accumulator.</li>
+						<li class="fragment fade-in">Simplifies hardware but increases instructions.</li>
+					</ul>
+				</section>
+
+				<!-- 1-Address Machine Example -->
+				<section data-auto-animate>
+					<h3>1-Address Machine Example</h3>
+					<pre class="fragment fade-in" style="font-size:0.7em;"><code class="language-asm">
+LOAD A
+MUL B
+SUB C
+STORE T1
+LOAD D
+DIV E
+ADD T1
+ADD F
+STORE T2
+    </code></pre>
+					<p class="fragment fade-up" style="color:#28a745;">⚙️ Result in T2. Accumulator-centric, minimal
+						registers.</p>
+				</section>
+
+				<!-- 0-Address Machine Overview -->
+				<section>
+					<h3>0-Address Machine</h3>
+					<p class="fragment fade-in" style="font-size:0.9em;">
+						<b>Architecture Overview:</b> Stack-based, operations use top stack elements: <code>OP</code>.
+						No explicit operands in instructions.
+					</p>
+					<ul style="font-size:0.85em;">
+						<li class="fragment fade-in">Used in stack machines (e.g., Java VM, some FPU in Pentium).</li>
+						<li class="fragment fade-in">PUSH loads data, POP stores results.</li>
+						<li class="fragment fade-in">Operations pop operands, push results.</li>
+					</ul>
+				</section>
+
+				<!-- 0-Address Machine Example -->
+				<section data-auto-animate>
+					<h3>0-Address Machine Example</h3>
+					<pre class="fragment fade-in" style="font-size:0.7em;"><code class="language-asm">
+PUSH A
+PUSH B
+MUL
+PUSH C
+SUB
+PUSH D
+PUSH E
+DIV
+ADD
+PUSH F
+ADD
+POP T1
+    </code></pre>
+					<p class="fragment fade-up" style="color:#20c997;">⚙️ Result in T1. Stack-based, no explicit
+						operands.</p>
+				</section>
+
+				<!-- Summary -->
+				<section>
+					<h3>Address Machines Summary</h3>
+					<div style="display:flex; justify-content:center; align-items:center; gap:20px; flex-wrap:wrap;">
+						<div class="fragment fade-in"
+							style="padding:10px 20px; border:2px solid #007bff; background:rgba(0,123,255,0.3); border-radius:10px;">
+							3-Address: Explicit operands
+						</div>
+						<div class="fragment fade-in"
+							style="padding:10px 20px; border:2px solid #ffa500; background:rgba(255,165,0,0.3); border-radius:10px;">
+							2-Address: Overwrite operand
+						</div>
+						<div class="fragment fade-in"
+							style="padding:10px 20px; border:2px solid #28a745; background:rgba(40,167,69,0.3); border-radius:10px;">
+							1-Address: Accumulator
+						</div>
+						<div class="fragment fade-in"
+							style="padding:10px 20px; border:2px solid #20c997; background:rgba(32,201,151,0.3); border-radius:10px;">
+							0-Address: Stack-based
+						</div>
+					</div>
+					<p class="fragment fade-up" style="margin-top:30px; font-size:0.9em;">
+						Each machine type balances <b>instruction complexity</b> and <b>hardware simplicity</b>.<br>
+						Pentium uses a mix, primarily 2-address with 3-address emulation.
+					</p>
+				</section>
 			</section>
-			<section>Slide 2</section>
+
+
+
 		</div>
 	</div>
 
