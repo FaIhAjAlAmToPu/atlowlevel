@@ -408,6 +408,238 @@ POP T1
 				</section>
 			</section>
 
+			<section>
+				<section>
+					<h2>Pentium Processor</h2>
+					<p>The Intel Pentium is a fifth-generation x86 microprocessor architecture introduced in 1993.</p>
+				</section>
+
+				<section>
+					<h3>Why Study the Pentium Processor?</h3>
+					<ul>
+						<li class="fragment">Introduced <strong>superscalar architecture</strong> — two instructions per
+							clock</li>
+						<li class="fragment">Illustrates key concepts like <em>pipelining</em>, <em>branch
+								prediction</em>, and <em>caching</em></li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Superscalar Processor (Pentium)</h3>
+
+					<p class="fragment fade-in">
+						A <strong>superscalar processor</strong> can perform <strong>more than one instruction</strong>
+						in the same clock cycle.
+					</p>
+
+					<div class="fragment fade-in">
+						<table style="margin:auto; border-collapse:collapse; border:2px solid #ccc;">
+							<tr>
+								<th style="padding:8px; border:2px solid #ccc;">Processor Type</th>
+								<th style="padding:8px; border:2px solid #ccc;">Instructions per Clock</th>
+							</tr>
+							<tr>
+								<td style="padding:8px; border:2px solid #ccc;">Scalar (e.g., 80486)</td>
+								<td style="padding:8px; border:2px solid #ccc;">1 instruction</td>
+							</tr>
+							<tr>
+								<td style="padding:8px; border:2px solid #ccc;">Superscalar (e.g., Pentium)</td>
+								<td style="padding:8px; border:2px solid #ccc;">2 or more instructions</td>
+							</tr>
+						</table>
+
+					</div>
+
+					<p class="fragment fade-in">
+						Pentium uses two pipelines — <strong>U-pipe</strong> and <strong>V-pipe</strong> —
+						so it can execute <em>two independent instructions</em> in parallel.
+					</p>
+
+					<pre class="fragment"><code class="language-asm" data-trim>
+; Example
+MOV EAX, [A]    ; U-pipe
+ADD EBX, [B]    ; V-pipe
+  </code></pre>
+				</section>
+
+				<section>
+					<h3>Superscalar Pipeline Flow</h3>
+					<p class="fragment fade-in">Two pipelines (U-pipe & V-pipe) execute independent instructions in
+						parallel.</p>
+
+					<div style="display:flex; gap:30px; margin-top:20px;" class="fragment fade-in">
+
+						<!-- Left: Code -->
+						<div style="flex:1;">
+							<pre style="font-family: monospace; font-size:16px;"><code>
+1. MOV EAX, [A]
+2. ADD EBX, [B]
+3. SUB ECX, EDX
+4. MUL EAX, ECX
+5. MOV ESI, [X]
+6. ADD EDI, [Y]
+      </code></pre>
+						</div>
+
+						<!-- Right: Pipeline Flow -->
+						<div style="flex:1; font-family: monospace;">
+							<div
+								style="display:grid; grid-template-columns: repeat(7, 80px); text-align:center; gap:5px;">
+								<!-- Header -->
+								<div style="font-weight:bold;">Clk</div>
+								<div style="font-weight:bold;">1</div>
+								<div style="font-weight:bold;">2</div>
+								<div style="font-weight:bold;">3</div>
+								<div style="font-weight:bold;">4</div>
+								<div style="font-weight:bold;">5</div>
+								<div style="font-weight:bold;">6</div>
+
+								<!-- U-pipe -->
+								<div style="font-weight:bold;">U</div>
+								<div style="background:#00BFFF; color:white; padding:5px; border-radius:3px;">MOV</div>
+								<div style="background:#00BFFF; color:white; padding:5px; border-radius:3px;">SUB</div>
+								<div style="background:#00BFFF; color:white; padding:5px; border-radius:3px;">MOV</div>
+								<div></div>
+								<div></div>
+								<div></div>
+
+								<!-- V-pipe -->
+								<div style="font-weight:bold;">V</div>
+								<div style="background:#FF69B4; color:white; padding:5px; border-radius:3px;">ADD</div>
+								<div></div>
+								<div style="background:#FF69B4; color:white; padding:5px; border-radius:3px;">MUL</div>
+								<div style="background:#FF69B4; color:white; padding:5px; border-radius:3px;">ADD</div>
+								<div></div>
+								<div></div>
+							</div>
+						</div>
+
+
+					</div>
+
+					<p class="fragment fade-in" style="margin-top:10px;">
+						✅ Two instructions per cycle in parallel (U + V).
+						⚠️ Dependent instructions must wait for previous results.
+					</p>
+				</section>
+			</section>
+			<section>
+				<section>
+					<h2>Pentium / Pentium Pro Processor</h2>
+					<p>The Pentium and Pentium Pro processor has three operating modes:</p>
+				</section>
+
+				<!-- Slide 2: Real-Address Mode -->
+				<section>
+					<h2>Real-Address Mode</h2>
+					<ul>
+						<li>Processor addresses "real" memory addresses (20-bit address, up to 1MB memory)</li>
+						<li>Also called "unprotected mode" because OS and applications run in the same mode</li>
+						<li>Processor starts in this mode on power-up or reset</li>
+					</ul>
+				</section>
+
+				<!-- Slide 3: Protected Mode -->
+				<section>
+					<h2>Protected Mode</h2>
+					<ul>
+						<li>Preferred mode for modern operating systems</li>
+						<li>Supports virtual memory addressing</li>
+						<li>Allows multiple programming environments and protections</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: System Management Mode -->
+				<section>
+					<h2>System Management Mode (SMM)</h2>
+					<ul>
+						<li>Designed for fast state snapshot and resumption</li>
+						<li>Useful for power management</li>
+					</ul>
+				</section>
+			</section>
+
+
+			<section>
+				<section>
+					<h2>What is a Register?</h2>
+					<ul style="font-size:1.2em; line-height:1.8;">
+						<li>Small, fast storage inside the CPU</li>
+						<li>Holds data, instructions, addresses, or intermediate results</li>
+						<li>Much faster than RAM</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>1.2 Register Set</h3>
+					<p class="fragment fade-in">The Pentium processor relies on a specialized set of registers to
+						support its superscalar architecture, executing two instructions per cycle via U-pipe and
+						V-pipe.</p>
+					<p class="fragment fade-in">There are three types of registers: general-purpose data registers,
+						segment registers, and status/control registers.</p>
+					<p class="fragment fade-in">Let’s explore these registers and their roles in optimizing performance.
+					</p>
+				</section>
+
+				<section>
+					<h3>Pentium Register Set</h3>
+					<div style="display:flex; gap:30px; margin-top:20px;">
+						<!-- General-purpose registers -->
+						<div style="flex:1;">
+							<h4>General-purpose registers (31-0)</h4>
+							<pre style="font-family: monospace; font-size:16px;"><code>
+EAX
+EBX
+ECX
+EDX
+ESI
+EDI
+EBP
+ESP
+            </code></pre>
+						</div>
+						<!-- Segment registers -->
+						<div style="flex:1;">
+							<h4>Segment registers (15-0)</h4>
+							<pre style="font-family: monospace; font-size:16px;"><code>
+CS
+DS
+SS
+ES
+FS
+GS
+            </code></pre>
+						</div>
+						<!-- Status and control registers -->
+						<div style="flex:1;">
+							<h4>Status and control registers</h4>
+							<pre style="font-family: monospace; font-size:16px;"><code>
+EFLAGS
+EIP
+            </code></pre>
+						</div>
+					</div>
+					<p class="fragment fade-in">These registers enable efficient data handling and instruction execution
+						in the Pentium’s dual pipelines.</p>
+				</section>
+
+				<section>
+					<h3>Understanding Pentium Registers</h3>
+					<ul>
+						<li class="fragment">General-purpose (EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP): Handle data and
+							addresses; EAX for results, ESP/EBP for stack management in pipelines.</li>
+						<li class="fragment">Segment (CS, DS, SS, ES, FS, GS): Define memory segments for protected
+							mode, supporting parallel memory access.</li>
+						<li class="fragment">Status/Control (EFLAGS, EIP): EFLAGS tracks operation status; EIP points to
+							the next instruction, critical for pipeline flow.</li>
+					</ul>
+					<p class="fragment fade-in">Why different? Specialized registers optimize the Pentium’s superscalar
+						design, reducing dependencies and enhancing parallel execution efficiency.</p>
+				</section>
+			</section>
+
+
+
 
 
 		</div>
