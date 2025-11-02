@@ -1331,7 +1331,7 @@ POP EAX       ; Load top value (20) into EAX, ESP = ESP + 4
 								<li>EAX: <input type="number" id="eax-slide1" placeholder="EAX value"></li>
 							</ul>
 							<button id="check-esp-slide1">Check Answer</button>
-							
+
 						</div>
 
 					</div>
@@ -1375,13 +1375,14 @@ SUB ESP, 16         ; Allocate 16 bytes for local variables
 						<!-- Right: Inputs -->
 						<div style="flex:1; max-width:45%;">
 							<p>After execution, what will be the values of <strong>EBP</strong> and
-								<strong>ESP</strong>?</p>
+								<strong>ESP</strong>?
+							</p>
 							<ul>
 								<li>EBP: <input type="number" id="ebp-slide2" placeholder="EBP value"></li>
 								<li>ESP: <input type="number" id="esp-slide2" placeholder="ESP value"></li>
 							</ul>
 							<button id="check-ebp-slide2">Check Answer</button>
-							
+
 						</div>
 
 					</div>
@@ -1420,6 +1421,161 @@ SUB ESP, 16         ; Allocate 16 bytes for local variables
 						<li>ES / FS / GS – Extra segments for additional memory access</li>
 					</ul>
 				</section>
+
+
+
+				<section>
+					<h3>DS Register – Data Segment (Pentium 32-bit Flat Model)</h3>
+					<p><small><strong>Hint:</strong> <code>.data</code> section starts at <code>0x00401000</code>. DS
+							selector base = <code>0</code> (flat model).</small></p>
+
+					<div class="flex">
+						<div class="col">
+							<pre><code>DATA1  DWORD 10      <span class="code-comment">; at 0x00401000</span>
+DATA2  DWORD 20      <span class="code-comment">; at 0x00401004</span>
+
+MOV AX, [DATA2]     <span class="code-comment">; loads from linear address of DATA2</span>
+</code></pre>
+						</div>
+
+						<div class="col">
+							<p>What **linear address** (hex, full 8 digits) is read to load AX?</p>
+							<input type="text" id="addr-ds" placeholder="e.g. 00401004"
+								style="width:140px; text-transform:uppercase;">
+							<button id="check-ds">Check</button>
+							<p id="result-ds" class="result"></p>
+						</div>
+					</div>
+				</section>
+
+				<script>
+					document.getElementById('check-ds').onclick = function () {
+						const ans = document.getElementById('addr-ds').value.trim().toUpperCase();
+						const correct = '00401004';
+						document.getElementById('result-ds').style.color = (ans === correct) ? 'green' : 'red';
+						document.getElementById('result-ds').textContent =
+							(ans === correct) ? '✅ Correct! [DATA2] = 00401004h (DATA1 takes 4 bytes)' : '❌ Incorrect. .data + 4 = 00401004h';
+					};
+				</script>
+
+
+				<!-- ============================================================= -->
+				<!-- 2. CS – Code Segment (32-bit Flat Model)                     -->
+				<!-- ============================================================= -->
+				<section>
+					<h3>CS Register – Code Segment (Pentium 32-bit Flat Model)</h3>
+					<p><small><strong>Hint:</strong> <code>.code</code> section starts at <code>0x00400000</code>. CS
+							selector base = <code>0</code>.</small></p>
+
+					<div class="flex">
+						<div class="col">
+							<pre><code>START:
+    MOV  AX, 5
+    ADD  AX, 10
+    JMP  START          <span class="code-comment">; jumps to linear address of START</span>
+</code></pre>
+						</div>
+
+						<div class="col">
+							<p>The <code>JMP START</code> fetches its target from which **linear address** (hex)?</p>
+							<input type="text" id="addr-cs" placeholder="e.g. 00400000"
+								style="width:140px; text-transform:uppercase;">
+							<button id="check-cs">Check</button>
+							<p id="result-cs" class="result"></p>
+						</div>
+					</div>
+				</section>
+
+				<script>
+					document.getElementById('check-cs').onclick = function () {
+						const ans = document.getElementById('addr-cs').value.trim().toUpperCase();
+						const correct = '00400000';
+						document.getElementById('result-cs').style.color = (ans === correct) ? 'green' : 'red';
+						document.getElementById('result-cs').textContent =
+							(ans === correct) ? '✅ Correct! START = 00400000h (start of .code)' : '❌ Incorrect. CS base=0 + offset of START';
+					};
+				</script>
+
+
+				<!-- ============================================================= -->
+				<!-- 3. SS – Stack Segment (32-bit Flat Model)                    -->
+				<!-- ============================================================= -->
+				<section>
+					<h3>SS Register – Stack Segment (Pentium 32-bit Flat Model)</h3>
+					<p><small><strong>Hint:</strong> SS selector base = <code>0</code>. Stack grows downward from
+							<code>0x00403000</code>. ESP = <code>0x00402FFC</code> **before** PUSH.</small></p>
+
+					<div class="flex">
+						<div class="col">
+							<pre><code>PUSH 50      <span class="code-comment">; push DWORD (4 bytes)</span>
+POP  EBX     <span class="code-comment">; pop DWORD into EBX</span>
+</code></pre>
+						</div>
+
+						<div class="col">
+							<p>At which **linear address** (hex) is the value `50` **stored** by PUSH?</p>
+							<input type="text" id="addr-ss" placeholder="e.g. 00402FF8"
+								style="width:140px; text-transform:uppercase;">
+							<button id="check-ss">Check</button>
+							<p id="result-ss" class="result"></p>
+						</div>
+					</div>
+				</section>
+
+				<script>
+					document.getElementById('check-ss').onclick = function () {
+						const ans = document.getElementById('addr-ss').value.trim().toUpperCase();
+						const correct = '00402FF8';
+						document.getElementById('result-ss').style.color = (ans === correct) ? 'green' : 'red';
+						document.getElementById('result-ss').textContent =
+							(ans === correct) ? '✅ Correct! PUSH: ESP -= 4 → 00402FF8h' : '❌ Incorrect. Stack grows down by 4 bytes (DWORD)';
+					};
+				</script>
+
+
+				<!-- ============================================================= -->
+				<!-- 4. ES – Extra Segment (String Copy)                          -->
+				<!-- ============================================================= -->
+				<section>
+					<h3>ES Register – String Operations (Pentium 32-bit Flat Model)</h3>
+					<p><small><strong>Hint:</strong> ES selector base = <code>0</code>. <code>arrDest</code> starts at
+							<code>0x00402000</code>.</small></p>
+
+					<div class="flex">
+						<div class="col">
+							<pre><code>arrSrc  DWORD 1,2,3         <span class="code-comment">; e.g. 0x00401000</span>
+arrDest DWORD 0,0,0         <span class="code-comment">; 0x00402000, +4, +8</span>
+
+MOV ESI, OFFSET arrSrc      <span class="code-comment">; ESI = 0x00401000</span>
+MOV EDI, OFFSET arrDest     <span class="code-comment">; EDI = 0x00402000</span>
+MOV ECX, 2
+REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[EDI]</span>
+</code></pre>
+						</div>
+
+						<div class="col">
+							<p>After <code>REP MOVSD</code> finishes, what **linear address** (hex) is in
+								<strong>EDI</strong>?</p>
+							<input type="text" id="addr-es" placeholder="e.g. 00402008"
+								style="width:140px; text-transform:uppercase;">
+							<button id="check-es">Check</button>
+							<p id="result-es" class="result"></p>
+						</div>
+					</div>
+				</section>
+
+				<script>
+					document.getElementById('check-es').onclick = function () {
+						const ans = document.getElementById('addr-es').value.trim().toUpperCase();
+						const correct = '00402008';
+						document.getElementById('result-es').style.color = (ans === correct) ? 'green' : 'red';
+						document.getElementById('result-es').textContent =
+							(ans === correct) ? '✅ Correct! EDI += 2×4 = 00402008h' : '❌ Incorrect. MOVSD advances EDI by 4 per DWORD';
+					};
+				</script>
+
+
+
 
 				<section>
 					<h2>Flag / Control Registers</h2>
