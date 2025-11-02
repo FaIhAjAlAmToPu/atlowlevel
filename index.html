@@ -954,6 +954,485 @@ MOV GS, AX       ; Another user-defined segment
 
 			</section>
 
+			<section>
+				<section>
+					<h3>Examples of registers in Pentium</h3>
+					<ul>
+						<li><strong>General Purpose Registers (GPRs):</strong>
+							Can be freely used for arithmetic (<code>ADD</code>, <code>MUL</code>), logic, and data
+							handling.</li>
+						<li><strong>Special / Segment Registers:</strong>
+							Reserved for memory segmentation — you <em>cannot</em> use them for <code>ADD</code> or
+							<code>MUL</code> because they store memory segment addresses, not data values.
+						</li>
+						<li><strong>Flag / Control Registers:</strong>
+							Used internally by the CPU to track conditions (Zero, Carry, etc.) and control processor
+							modes — not accessible for normal arithmetic operations.</li>
+					</ul>
+				</section>
+				<section>
+
+					<h2><em>
+							Registers are divided by purpose so the CPU can handle <strong>data processing, memory
+								management,</strong> and <strong>control tasks</strong> efficiently and simultaneously.
+						</em></h2>
+				</section>
+
+				<section>
+					<h2>General Purpose Registers (GPRs)</h2>
+					<p>Used for most CPU operations like arithmetic, logic, data movement, and memory addressing.
+						Programmers can use these registers flexibly for temporary storage or calculations.</p>
+				</section>
+
+
+
+				<section>
+					<h2>EAX – Accumulator Register</h2>
+					<p>Holds arithmetic and logic results. Automatically used in MUL, DIV, IN, OUT.</p>
+					<pre><code>
+MOV EAX, 5            ; Load 5 into EAX
+ADD EAX, 10           ; Add 10 → EAX = 15 (manual use)
+
+MOV EBX, 4
+MUL EBX               ; CPU automatically multiplies EAX × EBX
+                      ; Result stored in EDX:EAX (low 32 bits in EAX)
+  </code></pre>
+				</section>
+				<section>
+					<h2>MUL Instruction Interactive Question</h2>
+					<p>Consider the following 32-bit Pentium code:</p>
+					<pre><code>
+MOV EAX, 6       ; Load 6 into EAX
+MOV EBX, 7       ; Load 7 into EBX
+MUL EBX          ; Multiply EAX by EBX
+  </code></pre>
+
+					<p>After execution, enter the values in the boxes below:</p>
+					<ul>
+						<li>EAX: <input type="number" id="eax" placeholder="EAX value"></li>
+						<li>EDX: <input type="number" id="edx" placeholder="EDX value"></li>
+					</ul>
+
+					<button onclick="checkEAXAnswer()">Check Answer</button>
+					<p id="resulteax" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkEAXAnswer() {
+							const eax = parseFloat(document.getElementById('eax').value);
+							const edx = parseFloat(document.getElementById('edx').value);
+							const correctEAX = 42.0;
+							const correctEDX = 0.0;
+
+							if (eax === correctEAX && edx === correctEDX) {
+								document.getElementById('resulteax').textContent = "✅ Correct! EAX = 42, EDX = 0";
+								document.getElementById('resulteax').style.color = "green";
+							} else {
+								document.getElementById('resulteax').textContent = "❌ Incorrect. Try again!";
+								document.getElementById('resulteax').style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+
+				<section>
+					<h2>EBX – Base Register</h2>
+					<p>Often used as a base for memory addressing.</p>
+					<pre><code>
+MOV EBX, OFFSET arr   ; EBX = base address of array 'arr'
+MOV EAX, [EBX + 4]    ; Load 2nd element (base + offset 4 bytes)
+  </code></pre>
+				</section>
+
+				<section>
+					<h2>EBX Base Register Interactive Question</h2>
+					<p>Consider the following 32-bit Pentium code:</p>
+					<pre><code>
+arr DWORD 10, 20, 30, 40 ; Array in memory
+
+MOV EBX, OFFSET arr       ; Load base address of arr into EBX
+MOV EAX, [EBX + 8]       ; Load 3rd element of the array into EAX
+  </code></pre>
+
+					<p>After execution, what value will be in <strong>EAX</strong>?</p>
+
+					<input type="number" id="eax-ebx" placeholder="Enter EAX value">
+					<button onclick="checkEBXAnswer()">Check Answer</button>
+
+					<p id="result-ebx" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkEBXAnswer() {
+							const eax = parseFloat(document.getElementById('eax-ebx').value, 10);
+							const correctEAX = 30.0; // 3rd element in array (10,20,30,40)
+
+							if (eax === correctEAX) {
+								document.getElementById('result-ebx').textContent = "✅ Correct! EAX = 30";
+								document.getElementById('result-ebx').style.color = "green";
+							} else {
+								document.getElementById('result-ebx').textContent = "❌ Incorrect. Try again!";
+								document.getElementById('result-ebx').style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+
+
+				<section>
+					<h2>ECX – Counter Register</h2>
+					<p>Used as loop/iteration counter. Automatically decremented by LOOP/REP instructions.</p>
+					<pre><code>
+MOV ECX, 3            ; Loop counter = 3
+LoopStart:
+  ADD EAX, 1          ; Add 1 to EAX
+  LOOP LoopStart      ; Decrements ECX automatically, jumps if ECX ≠ 0
+</code></pre>
+					<pre><code>
+MOV ECX, 4
+LEA ESI, [Source]
+LEA EDI, [Dest]
+REP MOVSB             
+; MOVSB → “Move String Byte”
+; Copies 1 byte from memory at [ESI] → [EDI]
+; Copies bytes ECX times automatically
+  </code></pre>
+				</section>
+
+				<section>
+					<h3>ECX Register Interactive Question</h3>
+					<p>Consider the following 32-bit Pentium code:</p>
+					<pre><code>
+MOV ECX, 5      ; Load 5 into ECX
+MOV EAX, 0      ; Initialize EAX to 0
+
+LoopStart:
+ADD EAX, 2      ; Add 2 to EAX
+LOOP LoopStart  ; Decrement ECX and loop until ECX = 0
+  </code></pre>
+
+					<p>After execution, what value will be in <strong>EAX</strong> and <strong>ECX</strong>?</p>
+
+					<ul>
+						<li>EAX: <input type="number" id="eax-ecx" placeholder="EAX value"></li>
+						<li>ECX: <input type="number" id="ecx-ecx" placeholder="ECX value"></li>
+					</ul>
+
+					<button id="check-ecx-btn">Check Answer</button>
+					<p id="result-ecx" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+
+				<script type="text/javascript">
+					document.getElementById('check-ecx-btn').addEventListener('click', function () {
+						const eax = parseFloat(document.getElementById('eax-ecx').value);
+						const ecx = parseFloat(document.getElementById('ecx-ecx').value);
+
+						const correctEAX = 10.0;  // 5 loops × 2 added each time
+						const correctECX = 0.0;   // LOOP decrements ECX to 0
+
+						if (eax === correctEAX && ecx === correctECX) {
+							document.getElementById('result-ecx').textContent = "✅ Correct! EAX = 10, ECX = 0";
+							document.getElementById('result-ecx').style.color = "green";
+						} else {
+							document.getElementById('result-ecx').textContent = "❌ Incorrect. Try again!";
+							document.getElementById('result-ecx').style.color = "red";
+						}
+					});
+				</script>
+
+
+				<section>
+					<h2>EDX – Data Register</h2>
+					<p>Used in multiplication/division and I/O operations. Works automatically with EAX.</p>
+					<pre><code>
+MOV EAX, 10
+MOV EBX, 3
+MUL EBX               ; EAX × EBX → Result in EDX:EAX
+
+XOR EDX, EDX          ; Clear high bits
+DIV EBX               ; Divide (EDX:EAX) / EBX → Quotient in EAX, Remainder in EDX
+
+MOV DX, 0x03F8
+OUT DX, AL            ; Send AL to I/O port (DX)
+  </code></pre>
+				</section>
+
+				<section>
+					<h3>EDX/EAX Division Interactive Question</h3>
+					<p>Consider the following 32-bit Pentium code:</p>
+					<pre><code>
+MOV EAX, 42      ; Dividend
+MOV EBX, 7       ; Divisor
+DIV EBX          ; Divide EAX by EBX
+  </code></pre>
+
+					<p>After execution, what value will be in <strong>EAX</strong> (Quotient) and <strong>EDX</strong>
+						(Remainder)?</p>
+
+					<ul>
+						<li>EAX (Quotient): <input type="number" id="eax-div" placeholder="EAX value"></li>
+						<li>EDX (Remainder): <input type="number" id="edx-div" placeholder="EDX value"></li>
+					</ul>
+
+					<button id="check-div-btn">Check Answer</button>
+					<p id="result-div" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+
+				<script type="text/javascript">
+					document.getElementById('check-div-btn').addEventListener('click', function () {
+						const eax = parseFloat(document.getElementById('eax-div').value);
+						const edx = parseFloat(document.getElementById('edx-div').value);
+
+						const correctEAX = 6.0;   // Quotient
+						const correctEDX = 0.0;   // Remainder
+
+						if (eax === correctEAX && edx === correctEDX) {
+							document.getElementById('result-div').textContent = "✅ Correct! EAX = 6, EDX = 0";
+							document.getElementById('result-div').style.color = "green";
+						} else {
+							document.getElementById('result-div').textContent = "❌ Incorrect. Try again!";
+							document.getElementById('result-div').style.color = "red";
+						}
+					});
+				</script>
+
+
+				<section>
+					<h2>ESI – Source Index</h2>
+					<p>Holds source memory address for string/memory operations.</p>
+					<pre><code>
+MOV ESI, OFFSET src   ; Load source address
+MOV EDI, OFFSET dest  ; Load destination address
+MOV ECX, 5            ; Number of bytes to copy
+REP MOVSB             ; CPU automatically uses ESI as source
+  </code></pre>
+				</section>
+
+				<section>
+					<h2>EDI – Destination Index</h2>
+					<p>Holds destination memory address for string/memory operations.</p>
+					<pre><code>
+MOV ESI, OFFSET src   ; Source
+MOV EDI, OFFSET dest  ; Destination
+MOV ECX, 10
+REP MOVSB             ; CPU automatically uses EDI as destination
+  </code></pre>
+				</section>
+
+				<section>
+					<h3>ESI/EDI Interactive Question</h3>
+					<p style="font-size:0.80em;"><strong>Hint:</strong> Assume <code>arrSrc</code> starts at address
+						<code>1000</code> and <code>arrDest</code> starts at address <code>2000</code>.
+					</p>
+
+
+					<div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 30px;">
+
+						<!-- Left side: Code -->
+						<div style="flex:1; max-width:45%;">
+							<pre style="max-height:250px; overflow-y:auto;"><code>
+arrSrc DWORD 1, 2, 3, 4, 5
+arrDest DWORD 0, 0, 0, 0, 0
+MOV ESI, OFFSET arrSrc          ; ESI points to source array
+MOV EDI, OFFSET arrDest         ; EDI points to destination array
+MOV ECX, 3                      ; Number of DWORDs to copy
+REP MOVSD                        ; Copies ECX DWORDs from [ESI] to [EDI]
+      </code></pre>
+						</div>
+
+						<!-- Right side: Interactive inputs -->
+						<div style="flex:1; max-width:45%;">
+							<p>After execution, what will be the values of <strong>ESI</strong>, <strong>EDI</strong>,
+								and <strong>ECX</strong>?</p>
+							<ul>
+								<li>ESI: <input type="number" id="esi-rep" placeholder="ESI value"></li>
+								<li>EDI: <input type="number" id="edi-rep" placeholder="EDI value"></li>
+								<li>ECX: <input type="number" id="ecx-rep" placeholder="ECX value"></li>
+							</ul>
+							<button id="check-rep-btn">Check Answer</button>
+
+						</div>
+
+					</div>
+					<p id="result-rep" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+
+				<script type="text/javascript">
+					document.getElementById('check-rep-btn').addEventListener('click', function () {
+						const esi = parseFloat(document.getElementById('esi-rep').value);
+						const edi = parseFloat(document.getElementById('edi-rep').value);
+						const ecx = parseFloat(document.getElementById('ecx-rep').value);
+
+						const baseESI = 1000;
+						const baseEDI = 2000;
+
+						const correctESI = baseESI + 12.0;  // 3 DWORDs × 4 bytes = 12
+						const correctEDI = baseEDI + 12.0;  // 3 DWORDs × 4 bytes = 12
+						const correctECX = 0.0;             // REP MOVSD decrements ECX to 0
+
+						if (esi === correctESI && edi === correctEDI && ecx === correctECX) {
+							document.getElementById('result-rep').textContent = `✅ Correct! ESI = ${correctESI}, EDI = ${correctEDI}, ECX = 0`;
+							document.getElementById('result-rep').style.color = "green";
+						} else {
+							document.getElementById('result-rep').textContent = "❌ Incorrect. Try again!";
+							document.getElementById('result-rep').style.color = "red";
+						}
+					});
+				</script>
+
+
+
+
+				<section>
+					<h2>EBP – Base Pointer</h2>
+					<p>Marks base of stack frame; used for accessing parameters and local variables.</p>
+					<pre><code>
+PUSH EBP              ; Save old base pointer
+MOV  EBP, ESP         ; Set new base pointer
+MOV  EAX, [EBP + 8]   ; Access function argument
+MOV  EAX, [EBP - 4]   ; Access local variable
+POP  EBP               ; Restore old base pointer
+  </code></pre>
+				</section>
+
+				<section>
+					<h2>ESP – Stack Pointer</h2>
+					<p>Points to top of the stack. Updated automatically by PUSH/POP.</p>
+					<pre><code>
+PUSH EAX              ; Push EAX → ESP decreases by 4
+POP  EBX              ; Pop into EBX → ESP increases by 4
+  </code></pre>
+				</section>
+				<!-- ================== ESP Slide ================== -->
+				<section>
+					<h3>ESP Register Interactive Question – Stack Operations</h3>
+					<p><small><strong>Hint:</strong> Assume ESP initially points to address <code>6000</code>.</small>
+					</p>
+
+					<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:30px;">
+
+						<!-- Left: Code -->
+						<div style="flex:1; max-width:45%;">
+							<pre style="max-height:220px; overflow-y:auto;"><code>
+; Stack operations example
+PUSH 10       ; ESP = ESP - 4, store 10 at [ESP]
+PUSH 20       ; ESP = ESP - 4, store 20 at [ESP]
+POP EAX       ; Load top value (20) into EAX, ESP = ESP + 4
+      </code></pre>
+						</div>
+
+						<!-- Right: Inputs -->
+						<div style="flex:1; max-width:45%;">
+							<p>After execution, what will be the values of <strong>ESP</strong> and
+								<strong>EAX</strong>?
+							</p>
+							<ul>
+								<li>ESP: <input type="number" id="esp-slide1" placeholder="ESP value"></li>
+								<li>EAX: <input type="number" id="eax-slide1" placeholder="EAX value"></li>
+							</ul>
+							<button id="check-esp-slide1">Check Answer</button>
+							
+						</div>
+
+					</div>
+					<p id="result-esp-slide1" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+
+				<script type="text/javascript">
+					document.getElementById('check-esp-slide1').addEventListener('click', function () {
+						const esp = parseFloat(document.getElementById('esp-slide1').value);
+						const eax = parseFloat(document.getElementById('eax-slide1').value);
+
+						const initialESP = 6000;
+						const correctESP = 5996;  // PUSH 10 → 5996, PUSH 20 → 5992, POP → 5996
+						const correctEAX = 20;    // Last popped value
+
+						if (esp === correctESP && eax === correctEAX) {
+							document.getElementById('result-esp-slide1').textContent = `✅ Correct! ESP = ${correctESP}, EAX = ${correctEAX}`;
+							document.getElementById('result-esp-slide1').style.color = "green";
+						} else {
+							document.getElementById('result-esp-slide1').textContent = "❌ Incorrect. Try again!";
+							document.getElementById('result-esp-slide1').style.color = "red";
+						}
+					});
+				</script>
+
+				<section>
+					<h3>EBP Register Interactive Question – Function Stack</h3>
+					<p><small><strong>Hint:</strong> Assume the current ESP is at address <code>4000</code>.</small></p>
+
+					<div style="display:flex; justify-content:space-between; align-items:flex-start; gap:30px;">
+
+						<!-- Left: Code -->
+						<div style="flex:1; max-width:45%;">
+							<pre style="max-height:220px; overflow-y:auto;"><code>
+PUSH EBP            ; Save old base pointer
+MOV EBP, ESP        ; Set EBP to current stack pointer
+SUB ESP, 16         ; Allocate 16 bytes for local variables
+      </code></pre>
+						</div>
+
+						<!-- Right: Inputs -->
+						<div style="flex:1; max-width:45%;">
+							<p>After execution, what will be the values of <strong>EBP</strong> and
+								<strong>ESP</strong>?</p>
+							<ul>
+								<li>EBP: <input type="number" id="ebp-slide2" placeholder="EBP value"></li>
+								<li>ESP: <input type="number" id="esp-slide2" placeholder="ESP value"></li>
+							</ul>
+							<button id="check-ebp-slide2">Check Answer</button>
+							
+						</div>
+
+					</div>
+					<p id="result-ebp-slide2" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+
+				<script type="text/javascript">
+					document.getElementById('check-ebp-slide2').addEventListener('click', function () {
+						const ebp = parseFloat(document.getElementById('ebp-slide2').value);
+						const esp = parseFloat(document.getElementById('esp-slide2').value);
+
+						const initialESP = 4000;       // Stack starts at 4000
+						const correctEBP = initialESP - 4; // MOV EBP, ESP → EBP = 4000
+						const correctESP = correctEBP - 16; // Allocate 16 bytes → ESP = 3984
+
+						if (ebp === correctEBP && esp === correctESP) {
+							document.getElementById('result-ebp-slide2').textContent = `✅ Correct! EBP = ${correctEBP}, ESP = ${correctESP}`;
+							document.getElementById('result-ebp-slide2').style.color = "green";
+						} else {
+							document.getElementById('result-ebp-slide2').textContent = "❌ Incorrect. Try again!";
+							document.getElementById('result-ebp-slide2').style.color = "red";
+						}
+					});
+				</script>
+
+
+
+				<section>
+					<h2>Special Purpose / Segment Registers</h2>
+					<p>Dedicated to memory segmentation. Each register points to a specific memory segment (code, data,
+						stack, or extra). They are not used for arithmetic or general calculations.</p>
+					<ul>
+						<li>CS – Code Segment: points to instructions</li>
+						<li>DS – Data Segment: points to variables</li>
+						<li>SS – Stack Segment: points to stack</li>
+						<li>ES / FS / GS – Extra segments for additional memory access</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Flag / Control Registers</h2>
+					<p>Used by the CPU or OS to manage system state, control operations, and track results. These
+						registers are <b>hardware-focused</b>.</p>
+					<ul>
+						<li>EFLAGS – status flags (Zero, Carry, Sign, Overflow) and control flags</li>
+						<li>CR0 – CR4 – control registers for enabling protected mode, paging, and CPU features</li>
+					</ul>
+				</section>
+
+			</section>
+
 
 
 
