@@ -1555,7 +1555,8 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 
 						<div class="col">
 							<p>After <code>REP MOVSD</code> finishes, what **linear address** (hex) is in
-								<strong>EDI</strong>?</p>
+								<strong>EDI</strong>?
+							</p>
 							<input type="text" id="addr-es" placeholder="e.g. 00402008"
 								style="width:140px; text-transform:uppercase;">
 							<button id="check-es">Check</button>
@@ -1588,6 +1589,317 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 				</section>
 
 			</section>
+
+			<section>
+				<section>
+
+					<h2>Introduction to Assembly Language Statements</h2>
+					<ul>
+						<li><strong>Executable Instructions:</strong> Tell the processor what to do; generate machine
+							code.</li>
+						<li><strong>Assembler Directives (Pseudo-ops):</strong> Provide info to assembler; do not
+							generate machine code.</li>
+						<li><strong>Macros:</strong> Shorthand for a group of statements; replaced by their statements
+							during assembly.</li>
+					</ul>
+					<p><strong>Format:</strong></p>
+					<p> <code>[label] mnemonic [operands] [;comment]</code></p>
+				</section>
+
+				<section>
+					<h3>Executable Instruction</h3>
+					<pre><code>repeat:
+    INC result  ; increment result by 1</code></pre>
+
+					<h3>Directive</h3>
+					<pre><code>CR EQU 0DH  ; define carriage-return constant</code></pre>
+					<h3>Macro</h3>
+					<pre><code>PRINT_MSG MACRO
+    MOV DX, offset msg
+    MOV AH, 09H
+    INT 21H
+ENDM</code></pre>
+				</section>
+
+				<section>
+					<h3>Interactive Quiz: Identify Statement Type</h3>
+					<pre><code>
+1)  MOV BX, AX
+2)  MAX_VALUE EQU 100
+3)  SUM_MACRO MACRO
+  </code></pre>
+					<p>Choose the type for each (Executable / Directive / Macro):</p>
+					<ul>
+						<li>1️⃣:
+							<select id="q1">
+								<option value="">Select type</option>
+								<option value="executable">Executable</option>
+								<option value="directive">Directive</option>
+								<option value="macro">Macro</option>
+							</select>
+						</li>
+						<li>2️⃣:
+							<select id="q2">
+								<option value="">Select type</option>
+								<option value="executable">Executable</option>
+								<option value="directive">Directive</option>
+								<option value="macro">Macro</option>
+							</select>
+						</li>
+						<li>3️⃣:
+							<select id="q3">
+								<option value="">Select type</option>
+								<option value="executable">Executable</option>
+								<option value="directive">Directive</option>
+								<option value="macro">Macro</option>
+							</select>
+						</li>
+					</ul>
+					<button id="check-stmt">Check Answers</button>
+					<p id="result-stmt"></p>
+				</section>
+
+				<script>
+					document.getElementById('check-stmt').addEventListener('click', function () {
+						const a1 = document.getElementById('q1').value.toLowerCase();
+						const a2 = document.getElementById('q2').value.toLowerCase();
+						const a3 = document.getElementById('q3').value.toLowerCase();
+
+						if (a1 === 'executable' && a2 === 'directive' && a3 === 'macro') {
+							document.getElementById('result-stmt').textContent = "✅ Correct! You identified all statement types.";
+							document.getElementById('result-stmt').style.color = "green";
+						} else {
+							document.getElementById('result-stmt').textContent = "❌ Try again! Hint: Look at what each statement tells the assembler or CPU.";
+							document.getElementById('result-stmt').style.color = "red";
+						}
+					});
+				</script>
+
+
+				<section>
+					<h2>Practice – Label and Mnemonic Identification</h2>
+					<p>Identify the <strong>label</strong>, <strong>mnemonic</strong>, and <strong>operand</strong> in
+						each
+						statement:</p>
+					<ul>
+						<li>1. <code>start: MOV AX, 5</code></li>
+						<li>2. <code>LOOP: ADD AX, BX</code></li>
+						<li>3. <code>END_MACRO MACRO ... ENDM</code></li>
+					</ul>
+					<p><em>Hint:</em> Labels usually precede a colon, mnemonic is the operation, operand is the target
+						or
+						source.</p>
+				</section>
+
+				<section>
+					<h2>True or False – Assembly Statements</h2>
+					<ul>
+						<li>Executable instructions generate machine code. ✅</li>
+						<li>Directives are executed by the CPU. ❌</li>
+						<li>Macros can replace multiple instructions with one name. ✅</li>
+					</ul>
+				</section>
+			</section>
+			<section>
+				<!-- Slide 1: Introduction -->
+				<section>
+					<h2>Data Allocation in High-Level Languages</h2>
+					<p>In languages like C, storage for variables is allocated by specifying <strong>data
+							types</strong>.</p>
+				</section>
+
+				<!-- Slide 2: Example in C -->
+				<section>
+					<h2>C Variable Declarations</h2>
+					<pre><code>char response;  /* 1 byte */
+int value;       /* 4 bytes */
+float total;     /* 4 bytes */
+double temp;     /* 8 bytes */</code></pre>
+				</section>
+
+				<!-- Slide 3: Interpretation of Data -->
+				<section>
+					<h2>Bit Pattern Interpretation</h2>
+					<p>Two variables with same storage size may represent different values:</p>
+					<pre><code>unsigned value_1;
+int value_2;</code></pre>
+				</section>
+
+				<!-- Slide 4: Example of Bit Pattern -->
+				<section>
+					<p>Bit pattern: <code>8FF08DB9H</code></p>
+					<ul>
+						<li>Stored in <code>value_1</code> → +2.4149×10⁹</li>
+						<li>Stored in <code>value_2</code> → −1.88006×10⁹</li>
+					</ul>
+				</section>
+
+				<!-- Slide 5: Assembly Data Allocation -->
+				<section>
+					<h2>Data Allocation in Assembly</h2>
+					<p>Use <strong>define directives</strong> to reserve and initialize memory.</p>
+					<p>No automatic interpretation is attached to the data.</p>
+				</section>
+
+				<!-- Slide 6: General Format -->
+				<section>
+					<h2>Format of Storage Allocation</h2>
+					<pre><code>[variable-name] define-directive initial-value [, initial-value], ...</code></pre>
+					<p>No colon follows the variable name (unlike labels for executable statements).</p>
+				</section>
+
+				<!-- Slide 7: Define Directives -->
+				<section>
+					<h2>Define Directives</h2>
+					<ul>
+						<li><code>DB</code> – Define Byte (1 byte)</li>
+						<li><code>DW</code> – Define Word (2 bytes)</li>
+						<li><code>DD</code> – Define Doubleword (4 bytes)</li>
+						<li><code>DQ</code> – Define Quadword (8 bytes)</li>
+						<li><code>DT</code> – Define Ten Bytes (10 bytes)</li>
+					</ul>
+				</section>
+
+				<!-- Slide 8: Character Example -->
+				<section>
+					<h2>Byte Example</h2>
+					<pre><code>sorted DB 'y'      ; stores character y
+sorted DB 79H       ; stores same as 'y'
+sorted DB 1111001B  ; binary equivalent</code></pre>
+				</section>
+
+				<!-- Slide 9: Word Example -->
+				<section>
+					<h2>Word Example</h2>
+					<pre><code>value DW 25159</code></pre>
+					<p>16-bit representation (little-endian): 47 62</p>
+				</section>
+
+				<!-- Slide 10: Negative Numbers -->
+				<section>
+					<h2>Negative Word Example</h2>
+					<pre><code>balance DW -29255</code></pre>
+					<p>Stored as 2's complement: B9 8D</p>
+				</section>
+
+				<!-- Slide 11: Doubleword Example -->
+				<section>
+					<h2>Doubleword Example</h2>
+					<pre><code>total DD 542803535</code></pre>
+					<p>Stored as 4 bytes (little-endian): 4F 86 5A 20</p>
+				</section>
+
+
+				<!-- Slide 12: Quiz – Identify Directive Type -->
+				<section>
+					<h2>Quiz 1: Identify Directive Type</h2>
+					<p>Select the correct define directive for each variable:</p>
+					<ul>
+						<li>1️⃣ Allocate 1 byte for a character:
+							<select id="q1">
+								<option value="">Select</option>
+								<option value="db">DB</option>
+								<option value="dw">DW</option>
+								<option value="dd">DD</option>
+								<option value="dq">DQ</option>
+								<option value="dt">DT</option>
+							</select>
+						</li>
+						<li>2️⃣ Allocate 4 bytes for an integer:
+							<select id="q2">
+								<option value="">Select</option>
+								<option value="db">DB</option>
+								<option value="dw">DW</option>
+								<option value="dd">DD</option>
+								<option value="dq">DQ</option>
+								<option value="dt">DT</option>
+							</select>
+						</li>
+						<li>3️⃣ Allocate 2 bytes for a small number:
+							<select id="q3">
+								<option value="">Select</option>
+								<option value="db">DB</option>
+								<option value="dw">DW</option>
+								<option value="dd">DD</option>
+								<option value="dq">DQ</option>
+								<option value="dt">DT</option>
+							</select>
+						</li>
+					</ul>
+					<button id="check-directive">Check Answers</button>
+					<p id="result-directive"></p>
+				</section>
+
+				<script>
+					document.getElementById('check-directive').addEventListener('click', function () {
+						const a1 = document.getElementById('q1').value.toLowerCase();
+						const a2 = document.getElementById('q2').value.toLowerCase();
+						const a3 = document.getElementById('q3').value.toLowerCase();
+
+						if (a1 === 'db' && a2 === 'dd' && a3 === 'dw') {
+							document.getElementById('result-directive').textContent = "✅ Correct! Well done.";
+							document.getElementById('result-directive').style.color = "green";
+						} else {
+							document.getElementById('result-directive').textContent = "❌ Try again! Hint: DB=1 byte, DW=2 bytes, DD=4 bytes.";
+							document.getElementById('result-directive').style.color = "red";
+						}
+					});
+				</script>
+				<!-- Slide 13: Quiz – Little-Endian Storage -->
+				<section>
+					<h2>Quiz 2: Little-Endian Storage</h2>
+					<p>How would the 16-bit number <code>25159</code> be stored in memory (little-endian)?</p>
+					<select id="q4">
+						<option value="">Select</option>
+						<option value="47 62">47 62</option>
+						<option value="62 47">62 47</option>
+						<option value="20 5A">20 5A</option>
+					</select>
+					<button id="check-endian">Check Answer</button>
+					<p id="result-endian"></p>
+				</section>
+
+				<script>
+					document.getElementById('check-endian').addEventListener('click', function () {
+						const ans = document.getElementById('q4').value;
+						if (ans === '47 62') {
+							document.getElementById('result-endian').textContent = "✅ Correct! Little-endian stores least significant byte first.";
+							document.getElementById('result-endian').style.color = "green";
+						} else {
+							document.getElementById('result-endian').textContent = "❌ Incorrect! Remember: little-endian stores the LSB first.";
+							document.getElementById('result-endian').style.color = "red";
+						}
+					});
+				</script>
+				<!-- Slide 14: Quiz – Negative Number Storage -->
+				<section>
+					<h2>Quiz 3: Negative Number Storage</h2>
+					<p>The number <code>-29255</code> stored as a 16-bit word in 2's complement would be:</p>
+					<select id="q5">
+						<option value="">Select</option>
+						<option value="b9 8d">B9 8D</option>
+						<option value="8d b9">8D B9</option>
+						<option value="47 62">47 62</option>
+					</select>
+					<button id="check-negative">Check Answer</button>
+					<p id="result-negative"></p>
+				</section>
+
+				<script>
+					document.getElementById('check-negative').addEventListener('click', function () {
+						const ans = document.getElementById('q5').value.toLowerCase();
+						if (ans === 'b9 8d') {
+							document.getElementById('result-negative').textContent = "✅ Correct! Negative numbers use 2's complement.";
+							document.getElementById('result-negative').style.color = "green";
+						} else {
+							document.getElementById('result-negative').textContent = "❌ Incorrect! Check the 2's complement byte order (little-endian).";
+							document.getElementById('result-negative').style.color = "red";
+						}
+					});
+				</script>
+
+			</section>
+
 
 
 
