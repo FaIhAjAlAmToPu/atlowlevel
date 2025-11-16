@@ -1898,6 +1898,313 @@ sorted DB 1111001B  ; binary equivalent</code></pre>
 					});
 				</script>
 
+				<section>
+					<h1>Data Allocation in Assembly</h1>
+					<p>DB • DW • DD • DQ • RESB • TIMES • Symbol Table</p>
+				</section>
+
+				<!-- SLIDE 2 -->
+				<section>
+					<h2>Numeric Operand Ranges</h2>
+					<table border="1" style="font-size:24px;">
+						<tr>
+							<th>Directive</th>
+							<th>Range</th>
+						</tr>
+						<tr>
+							<td>DB</td>
+							<td>-128 to 255</td>
+						</tr>
+						<tr>
+							<td>DW</td>
+							<td>-32768 to 65535</td>
+						</tr>
+						<tr>
+							<td>DD</td>
+							<td>-2,147,483,648 to 4,294,967,295 <br> or 32-bit float</td>
+						</tr>
+						<tr>
+							<td>DQ</td>
+							<td>-2⁶³ to 2⁶⁴-1 <br> or 64-bit float</td>
+						</tr>
+					</table>
+				</section>
+
+				<!-- SLIDE 3 -->
+				<section>
+					<h2>Examples: Real Numbers</h2>
+					<pre>
+float1 DD 1.234
+real2  DQ 123.456
+  </pre>
+					<p>DD → 32-bit float <br>DQ → 64-bit float</p>
+				</section>
+
+				<!-- QUIZ 1 -->
+				<section>
+					<h2>Quiz 1 — Choose the Correct Directive</h2>
+					<p>Which directive fits each purpose?</p>
+
+					<p>1️⃣ A 64-bit floating-point number:
+						<select id="q1">
+							<option value="">Select</option>
+							<option value="db">DB</option>
+							<option value="dd">DD</option>
+							<option value="dq">DQ</option>
+						</select>
+					</p>
+
+					<p>2️⃣ Value range −128 to 255:
+						<select id="q2">
+							<option value="">Select</option>
+							<option value="db">DB</option>
+							<option value="dw">DW</option>
+							<option value="dd">DD</option>
+						</select>
+					</p>
+
+					<button onclick="check1()">Check</button>
+					<p id="r1"></p>
+				</section>
+
+				<!-- SLIDE 4 -->
+				<section>
+					<h2>Uninitialized Data</h2>
+					<ul>
+						<li>RESB — Reserve Byte</li>
+						<li>RESW — Reserve Word</li>
+						<li>RESD — Reserve Doubleword</li>
+						<li>RESQ — Reserve Quadword</li>
+						<li>REST — Reserve Ten Bytes</li>
+					</ul>
+					<pre>
+response RESB 1
+buffer   RESW 100
+total    RESD 1
+  </pre>
+				</section>
+
+				<!-- QUIZ 2 -->
+				<section>
+					<h2>Quiz 2 — Reserve Directives</h2>
+					<p>1️⃣ Reserve 10 words:
+						<select id="q3">
+							<option value="">Select</option>
+							<option value="resb">RESB</option>
+							<option value="resw">RESW</option>
+							<option value="resd">RESD</option>
+						</select>
+					</p>
+
+					<p>2️⃣ Reserve a doubleword:
+						<select id="q4">
+							<option value="">Select</option>
+							<option value="resb">RESB</option>
+							<option value="resd">RESD</option>
+							<option value="resq">RESQ</option>
+						</select>
+					</p>
+
+					<button onclick="check2()">Check</button>
+					<p id="r2"></p>
+				</section>
+
+				<!-- SLIDE 5 -->
+				<section>
+					<h2>Multiple Definitions</h2>
+					<pre>
+sort  DB 'y'
+value DW 25159
+total DD 542803535
+  </pre>
+
+					<p>The assembler stores them in <b>contiguous memory</b>.</p>
+				</section>
+
+				<!-- SLIDE 6 -->
+				<section>
+					<h2>Memory Layout Example</h2>
+					<pre>
+address: x   x+1 x+2 x+3 x+4 x+5 x+6
+contents: 79          ; 'y'
+          47 62       ; 25159 → 6247h (little-endian)
+          4F 86 5A 20 ; DD
+  </pre>
+				</section>
+
+				<!-- QUIZ 3 -->
+				<section>
+					<h2>Quiz 3 — Little Endian</h2>
+					<p>How is the 16-bit value <b>25159</b> stored?</p>
+					<select id="q5">
+						<option value="">Select</option>
+						<option value="4762">47 62</option>
+						<option value="6247">62 47</option>
+					</select>
+
+					<button onclick="check3()">Check</button>
+					<p id="r3"></p>
+				</section>
+
+				<!-- SLIDE 7 -->
+				<section>
+					<h2>Abbreviated Definitions</h2>
+					<pre>
+message DB 'W','E','L','C','O','M','E','!'
+; OR
+message DB 'WELCOME!'
+  </pre>
+				</section>
+
+				<!-- SLIDE 8 -->
+				<section>
+					<h2>Expressions</h2>
+					<p>The assembler computes expressions at assembly time.</p>
+					<pre>
+max_marks DW 7*25  ; = 175
+  </pre>
+				</section>
+
+				<!-- SLIDE 9 -->
+				<section>
+					<h2>Multiple Initializations — TIMES</h2>
+					<pre>
+marks TIMES 8 DW 0
+  </pre>
+					<p>Creates 8 words initialized to 0.</p>
+				</section>
+
+				<!-- QUIZ 4 -->
+				<section>
+					<h2>Quiz 4 — TIMES</h2>
+					<p>Which directive creates an array of 5 bytes initialized to 0?</p>
+
+					<select id="q6">
+						<option value="">Select</option>
+						<option value="times5db0">TIMES 5 DB 0</option>
+						<option value="db5times0">DB 5 TIMES 0</option>
+						<option value="resb5">RESB 5</option>
+					</select>
+
+					<button onclick="check4()">Check</button>
+					<p id="r4"></p>
+				</section>
+
+				<!-- SLIDE 10 -->
+				<section>
+					<h2>Symbol Table</h2>
+					<pre>
+value  DW 0
+sum    DD 0
+marks  TIMES 10 DW 0
+message DB 'The grade is:',0
+char1   DB ?
+  </pre>
+
+					<p>Assembler assigns offsets based on bytes.</p>
+				</section>
+
+				<!-- SLIDE 11 -->
+				<section>
+					<h2>Symbol Table Output</h2>
+					<pre>
+value   → offset 0
+sum     → offset 2
+marks   → offset 6
+message → offset 26
+char1   → offset 40
+  </pre>
+				</section>
+
+				<!-- QUIZ 5 -->
+				<section>
+					<h2>Quiz 5 — Symbol Table</h2>
+					<p>If <code>a DW 0</code> and <code>b DD 0</code> and <code>c DB 0</code>, what is the offset of c?
+					</p>
+
+					<select id="q7">
+						<option value="">Select</option>
+						<option value="7">7</option>
+						<option value="6">6</option>
+						<option value="2">2</option>
+					</select>
+
+					<button onclick="check5()">Check</button>
+					<p id="r5"></p>
+				</section>
+
+				<script>
+					// get all elements
+					let q1 = document.getElementById("q1");
+					let q2 = document.getElementById("q2");
+					let r1 = document.getElementById("r1");
+
+					let q3 = document.getElementById("q3");
+					let q4 = document.getElementById("q4");
+					let r2 = document.getElementById("r2");
+
+					let q5 = document.getElementById("q5");
+					let r3 = document.getElementById("r3");
+
+					let q6 = document.getElementById("q6");
+					let r4 = document.getElementById("r4");
+
+					let q7 = document.getElementById("q7");
+					let r5 = document.getElementById("r5");
+
+					// Quiz functions
+					function check1() {
+						if (q1.value.toLowerCase() === "dq" && q2.value.toLowerCase() === "db") {
+							r1.textContent = "✅ Correct!";
+							r1.style.color = "lightgreen";
+						} else {
+							r1.textContent = "❌ Try again.";
+							r1.style.color = "red";
+						}
+					}
+
+					function check2() {
+						if (q3.value.toLowerCase() === "resw" && q4.value.toLowerCase() === "resd") {
+							r2.textContent = "✅ Correct!";
+							r2.style.color = "lightgreen";
+						} else {
+							r2.textContent = "❌ Incorrect.";
+							r2.style.color = "red";
+						}
+					}
+
+					function check3() {
+						if (q5.value === "4762") {
+							r3.textContent = "Correct — Little endian stores LSB first.";
+							r3.style.color = "lightgreen";
+						} else {
+							r3.textContent = "Incorrect.";
+							r3.style.color = "red";
+						}
+					}
+
+					function check4() {
+						if (q6.value === "times5db0") {
+							r4.textContent = "Correct!";
+							r4.style.color = "lightgreen";
+						} else {
+							r4.textContent = "Incorrect.";
+							r4.style.color = "red";
+						}
+					}
+
+					function check5() {
+						if (q7.value === "6") {
+							r5.textContent = "Correct!";
+							r5.style.color = "lightgreen";
+						} else {
+							r5.textContent = "Incorrect.";
+							r5.style.color = "red";
+						}
+					}
+
+				</script>
+
 			</section>
 
 
