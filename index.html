@@ -1591,8 +1591,8 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 			</section>
 
 			<section>
+				<!-- Introduction to Assembly Language Statements -->
 				<section>
-
 					<h2>Introduction to Assembly Language Statements</h2>
 					<ul>
 						<li><strong>Executable Instructions:</strong> Tell the processor what to do; generate machine
@@ -1603,7 +1603,7 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 							during assembly.</li>
 					</ul>
 					<p><strong>Format:</strong></p>
-					<p> <code>[label] mnemonic [operands] [;comment]</code></p>
+					<p><code>[label] mnemonic [operands] [;comment]</code></p>
 				</section>
 
 				<section>
@@ -1613,6 +1613,7 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 
 					<h3>Directive</h3>
 					<pre><code>CR EQU 0DH  ; define carriage-return constant</code></pre>
+
 					<h3>Macro</h3>
 					<pre><code>PRINT_MSG MACRO
     MOV DX, offset msg
@@ -1621,6 +1622,7 @@ REP MOVSD                   <span class="code-comment">; copy 2 DWORDs to ES:[ED
 ENDM</code></pre>
 				</section>
 
+				<!-- Quiz: Identify Statement Type -->
 				<section>
 					<h3>Interactive Quiz: Identify Statement Type</h3>
 					<pre><code>
@@ -1631,7 +1633,7 @@ ENDM</code></pre>
 					<p>Choose the type for each (Executable / Directive / Macro):</p>
 					<ul>
 						<li>1️⃣:
-							<select id="q1">
+							<select id="stmt-type-1">
 								<option value="">Select type</option>
 								<option value="executable">Executable</option>
 								<option value="directive">Directive</option>
@@ -1639,7 +1641,7 @@ ENDM</code></pre>
 							</select>
 						</li>
 						<li>2️⃣:
-							<select id="q2">
+							<select id="stmt-type-2">
 								<option value="">Select type</option>
 								<option value="executable">Executable</option>
 								<option value="directive">Directive</option>
@@ -1647,7 +1649,7 @@ ENDM</code></pre>
 							</select>
 						</li>
 						<li>3️⃣:
-							<select id="q3">
+							<select id="stmt-type-3">
 								<option value="">Select type</option>
 								<option value="executable">Executable</option>
 								<option value="directive">Directive</option>
@@ -1655,60 +1657,40 @@ ENDM</code></pre>
 							</select>
 						</li>
 					</ul>
-					<button id="check-stmt">Check Answers</button>
-					<p id="result-stmt"></p>
+					<button id="check-stmt-types">Check Answers</button>
+					<p id="result-stmt-types" style="margin-top:10px; font-weight:bold;"></p>
 				</section>
-
-				<script>
-					document.getElementById('check-stmt').addEventListener('click', function () {
-						const a1 = document.getElementById('q1').value.toLowerCase();
-						const a2 = document.getElementById('q2').value.toLowerCase();
-						const a3 = document.getElementById('q3').value.toLowerCase();
-
-						if (a1 === 'executable' && a2 === 'directive' && a3 === 'macro') {
-							document.getElementById('result-stmt').textContent = "✅ Correct! You identified all statement types.";
-							document.getElementById('result-stmt').style.color = "green";
-						} else {
-							document.getElementById('result-stmt').textContent = "❌ Try again! Hint: Look at what each statement tells the assembler or CPU.";
-							document.getElementById('result-stmt').style.color = "red";
-						}
-					});
-				</script>
-
 
 				<section>
 					<h2>Practice – Label and Mnemonic Identification</h2>
 					<p>Identify the <strong>label</strong>, <strong>mnemonic</strong>, and <strong>operand</strong> in
-						each
-						statement:</p>
+						each statement:</p>
 					<ul>
 						<li>1. <code>start: MOV AX, 5</code></li>
 						<li>2. <code>LOOP: ADD AX, BX</code></li>
 						<li>3. <code>END_MACRO MACRO ... ENDM</code></li>
 					</ul>
 					<p><em>Hint:</em> Labels usually precede a colon, mnemonic is the operation, operand is the target
-						or
-						source.</p>
+						or source.</p>
 				</section>
 
 				<section>
 					<h2>True or False – Assembly Statements</h2>
 					<ul>
-						<li>Executable instructions generate machine code. ✅</li>
-						<li>Directives are executed by the CPU. ❌</li>
-						<li>Macros can replace multiple instructions with one name. ✅</li>
+						<li>Executable instructions generate machine code. Correct</li>
+						<li>Directives are executed by the CPU. Incorrect</li>
+						<li>Macros can replace multiple instructions with one name. Correct</li>
 					</ul>
 				</section>
 			</section>
+
+			<!-- Data Allocation Section -->
 			<section>
-				<!-- Slide 1: Introduction -->
 				<section>
 					<h2>Data Allocation in High-Level Languages</h2>
 					<p>In languages like C, storage for variables is allocated by specifying <strong>data
 							types</strong>.</p>
 				</section>
-
-				<!-- Slide 2: Example in C -->
 				<section>
 					<h2>C Variable Declarations</h2>
 					<pre><code>char response;  /* 1 byte */
@@ -1716,16 +1698,12 @@ int value;       /* 4 bytes */
 float total;     /* 4 bytes */
 double temp;     /* 8 bytes */</code></pre>
 				</section>
-
-				<!-- Slide 3: Interpretation of Data -->
 				<section>
 					<h2>Bit Pattern Interpretation</h2>
 					<p>Two variables with same storage size may represent different values:</p>
 					<pre><code>unsigned value_1;
 int value_2;</code></pre>
 				</section>
-
-				<!-- Slide 4: Example of Bit Pattern -->
 				<section>
 					<p>Bit pattern: <code>8FF08DB9H</code></p>
 					<ul>
@@ -1733,22 +1711,17 @@ int value_2;</code></pre>
 						<li>Stored in <code>value_2</code> → −1.88006×10⁹</li>
 					</ul>
 				</section>
-
-				<!-- Slide 5: Assembly Data Allocation -->
 				<section>
 					<h2>Data Allocation in Assembly</h2>
 					<p>Use <strong>define directives</strong> to reserve and initialize memory.</p>
 					<p>No automatic interpretation is attached to the data.</p>
 				</section>
-
-				<!-- Slide 6: General Format -->
 				<section>
 					<h2>Format of Storage Allocation</h2>
 					<pre><code>[variable-name] define-directive initial-value [, initial-value], ...</code></pre>
-					<p>No colon follows the variable name (unlike labels for executable statements).</p>
+					<p>No colon follows the variable name.</p>
 				</section>
 
-				<!-- Slide 7: Define Directives -->
 				<section>
 					<h2>Define Directives</h2>
 					<ul>
@@ -1760,153 +1733,84 @@ int value_2;</code></pre>
 					</ul>
 				</section>
 
-				<!-- Slide 8: Character Example -->
 				<section>
 					<h2>Byte Example</h2>
 					<pre><code>sorted DB 'y'      ; stores character y
 sorted DB 79H       ; stores same as 'y'
 sorted DB 1111001B  ; binary equivalent</code></pre>
 				</section>
-
-				<!-- Slide 9: Word Example -->
 				<section>
 					<h2>Word Example</h2>
 					<pre><code>value DW 25159</code></pre>
-					<p>16-bit representation (little-endian): 47 62</p>
+					<p>16-bit (little-endian): <code>47 62</code></p>
 				</section>
-
-				<!-- Slide 10: Negative Numbers -->
 				<section>
 					<h2>Negative Word Example</h2>
 					<pre><code>balance DW -29255</code></pre>
-					<p>Stored as 2's complement: B9 8D</p>
+					<p>2's complement: <code>B9 8D</code></p>
 				</section>
-
-				<!-- Slide 11: Doubleword Example -->
 				<section>
 					<h2>Doubleword Example</h2>
 					<pre><code>total DD 542803535</code></pre>
-					<p>Stored as 4 bytes (little-endian): 4F 86 5A 20</p>
+					<p>Stored: <code>4F 86 5A 20</code></p>
 				</section>
 
-
-				<!-- Slide 12: Quiz – Identify Directive Type -->
+				<!-- Quiz 1: Directive Size -->
 				<section>
 					<h2>Quiz 1: Identify Directive Type</h2>
-					<p>Select the correct define directive for each variable:</p>
+					<p>Select the correct define directive:</p>
 					<ul>
-						<li>1️⃣ Allocate 1 byte for a character:
-							<select id="q1">
+						<li>1️⃣ 1 byte for a character: <select id="dir-char">
 								<option value="">Select</option>
 								<option value="db">DB</option>
 								<option value="dw">DW</option>
 								<option value="dd">DD</option>
-								<option value="dq">DQ</option>
-								<option value="dt">DT</option>
-							</select>
-						</li>
-						<li>2️⃣ Allocate 4 bytes for an integer:
-							<select id="q2">
+							</select></li>
+						<li>2️⃣ 4 bytes for an integer: <select id="dir-int">
 								<option value="">Select</option>
 								<option value="db">DB</option>
 								<option value="dw">DW</option>
 								<option value="dd">DD</option>
-								<option value="dq">DQ</option>
-								<option value="dt">DT</option>
-							</select>
-						</li>
-						<li>3️⃣ Allocate 2 bytes for a small number:
-							<select id="q3">
+							</select></li>
+						<li>3️⃣ 2 bytes for a small number: <select id="dir-word">
 								<option value="">Select</option>
 								<option value="db">DB</option>
 								<option value="dw">DW</option>
 								<option value="dd">DD</option>
-								<option value="dq">DQ</option>
-								<option value="dt">DT</option>
-							</select>
-						</li>
+							</select></li>
 					</ul>
-					<button id="check-directive">Check Answers</button>
-					<p id="result-directive"></p>
+					<button id="check-dir-sizes">Check</button>
+					<p id="result-dir-sizes" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
 
-				<script>
-					document.getElementById('check-directive').addEventListener('click', function () {
-						const a1 = document.getElementById('q1').value.toLowerCase();
-						const a2 = document.getElementById('q2').value.toLowerCase();
-						const a3 = document.getElementById('q3').value.toLowerCase();
-
-						if (a1 === 'db' && a2 === 'dd' && a3 === 'dw') {
-							document.getElementById('result-directive').textContent = "✅ Correct! Well done.";
-							document.getElementById('result-directive').style.color = "green";
-						} else {
-							document.getElementById('result-directive').textContent = "❌ Try again! Hint: DB=1 byte, DW=2 bytes, DD=4 bytes.";
-							document.getElementById('result-directive').style.color = "red";
-						}
-					});
-				</script>
-				<!-- Slide 13: Quiz – Little-Endian Storage -->
+				<!-- Quiz 2: Little-Endian Storage -->
 				<section>
 					<h2>Quiz 2: Little-Endian Storage</h2>
-					<p>How would the 16-bit number <code>25159</code> be stored in memory (little-endian)?</p>
-					<select id="q4">
-						<option value="">Select</option>
-						<option value="47 62">47 62</option>
-						<option value="62 47">62 47</option>
-						<option value="20 5A">20 5A</option>
-					</select>
-					<button id="check-endian">Check Answer</button>
-					<p id="result-endian"></p>
+					<p>How is <code>25159</code> (16-bit) stored in memory?</p>
+					<input type="text" id="little-endian-input" placeholder="e.g. 47 62"
+						style="font-family: monospace; width: 120px;">
+					<button id="check-little-endian">Check</button>
+					<p id="result-little-endian" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
 
-				<script>
-					document.getElementById('check-endian').addEventListener('click', function () {
-						const ans = document.getElementById('q4').value;
-						if (ans === '47 62') {
-							document.getElementById('result-endian').textContent = "✅ Correct! Little-endian stores least significant byte first.";
-							document.getElementById('result-endian').style.color = "green";
-						} else {
-							document.getElementById('result-endian').textContent = "❌ Incorrect! Remember: little-endian stores the LSB first.";
-							document.getElementById('result-endian').style.color = "red";
-						}
-					});
-				</script>
-				<!-- Slide 14: Quiz – Negative Number Storage -->
+				<!-- Quiz 3: Negative Number (2's Complement) -->
 				<section>
 					<h2>Quiz 3: Negative Number Storage</h2>
-					<p>The number <code>-29255</code> stored as a 16-bit word in 2's complement would be:</p>
-					<select id="q5">
-						<option value="">Select</option>
-						<option value="b9 8d">B9 8D</option>
-						<option value="8d b9">8D B9</option>
-						<option value="47 62">47 62</option>
-					</select>
-					<button id="check-negative">Check Answer</button>
-					<p id="result-negative"></p>
+					<p><code>-29255</code> as 16-bit 2's complement (little-endian):</p>
+					<input type="text" id="neg-2s-input" placeholder="e.g. B9 8D"
+						style="font-family: monospace; width: 120px; text-transform: uppercase;">
+					<button id="check-neg-2s">Check</button>
+					<p id="result-neg-2s" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
-
-				<script>
-					document.getElementById('check-negative').addEventListener('click', function () {
-						const ans = document.getElementById('q5').value.toLowerCase();
-						if (ans === 'b9 8d') {
-							document.getElementById('result-negative').textContent = "✅ Correct! Negative numbers use 2's complement.";
-							document.getElementById('result-negative').style.color = "green";
-						} else {
-							document.getElementById('result-negative').textContent = "❌ Incorrect! Check the 2's complement byte order (little-endian).";
-							document.getElementById('result-negative').style.color = "red";
-						}
-					});
-				</script>
 
 				<section>
 					<h1>Data Allocation in Assembly</h1>
 					<p>DB • DW • DD • DQ • RESB • TIMES • Symbol Table</p>
 				</section>
 
-				<!-- SLIDE 2 -->
 				<section>
 					<h2>Numeric Operand Ranges</h2>
-					<table border="1" style="font-size:24px;">
+					<table border="1" style="font-size:24px; margin: auto;">
 						<tr>
 							<th>Directive</th>
 							<th>Range</th>
@@ -1921,53 +1825,41 @@ sorted DB 1111001B  ; binary equivalent</code></pre>
 						</tr>
 						<tr>
 							<td>DD</td>
-							<td>-2,147,483,648 to 4,294,967,295 <br> or 32-bit float</td>
+							<td>-2,147,483,648 to 4,294,967,295<br>or 32-bit float</td>
 						</tr>
 						<tr>
 							<td>DQ</td>
-							<td>-2⁶³ to 2⁶⁴-1 <br> or 64-bit float</td>
+							<td>-2⁶³ to 2⁶⁴-1<br>or 64-bit float</td>
 						</tr>
 					</table>
 				</section>
 
-				<!-- SLIDE 3 -->
 				<section>
 					<h2>Examples: Real Numbers</h2>
 					<pre>
 float1 DD 1.234
 real2  DQ 123.456
   </pre>
-					<p>DD → 32-bit float <br>DQ → 64-bit float</p>
+					<p>DD → 32-bit float<br>DQ → 64-bit float</p>
 				</section>
 
-				<!-- QUIZ 1 -->
+				<!-- Quiz 4: Floating Point & Range -->
 				<section>
-					<h2>Quiz 1 — Choose the Correct Directive</h2>
-					<p>Which directive fits each purpose?</p>
-
-					<p>1️⃣ A 64-bit floating-point number:
-						<select id="q1">
+					<h2>Quiz 4: Choose Correct Directive</h2>
+					<p>1️⃣ 64-bit float: <select id="fp64">
 							<option value="">Select</option>
-							<option value="db">DB</option>
-							<option value="dd">DD</option>
 							<option value="dq">DQ</option>
-						</select>
-					</p>
-
-					<p>2️⃣ Value range −128 to 255:
-						<select id="q2">
+							<option value="dd">DD</option>
+						</select></p>
+					<p>2️⃣ Range −128 to 255: <select id="range-byte">
 							<option value="">Select</option>
 							<option value="db">DB</option>
 							<option value="dw">DW</option>
-							<option value="dd">DD</option>
-						</select>
-					</p>
-
-					<button onclick="check1()">Check</button>
-					<p id="r1"></p>
+						</select></p>
+					<button id="check-fp-range">Check</button>
+					<p id="result-fp-range" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
 
-				<!-- SLIDE 4 -->
 				<section>
 					<h2>Uninitialized Data</h2>
 					<ul>
@@ -1984,32 +1876,23 @@ total    RESD 1
   </pre>
 				</section>
 
-				<!-- QUIZ 2 -->
+				<!-- Quiz 5: Reserve Directives -->
 				<section>
-					<h2>Quiz 2 — Reserve Directives</h2>
-					<p>1️⃣ Reserve 10 words:
-						<select id="q3">
+					<h2>Quiz 5: Reserve Directives</h2>
+					<p>1️⃣ Reserve 10 words: <select id="res-words">
 							<option value="">Select</option>
-							<option value="resb">RESB</option>
 							<option value="resw">RESW</option>
-							<option value="resd">RESD</option>
-						</select>
-					</p>
-
-					<p>2️⃣ Reserve a doubleword:
-						<select id="q4">
-							<option value="">Select</option>
 							<option value="resb">RESB</option>
+						</select></p>
+					<p>2️⃣ Reserve a doubleword: <select id="res-dword">
+							<option value="">Select</option>
 							<option value="resd">RESD</option>
 							<option value="resq">RESQ</option>
-						</select>
-					</p>
-
-					<button onclick="check2()">Check</button>
-					<p id="r2"></p>
+						</select></p>
+					<button id="check-reserve">Check</button>
+					<p id="result-reserve" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
 
-				<!-- SLIDE 5 -->
 				<section>
 					<h2>Multiple Definitions</h2>
 					<pre>
@@ -2017,80 +1900,71 @@ sort  DB 'y'
 value DW 25159
 total DD 542803535
   </pre>
-
-					<p>The assembler stores them in <b>contiguous memory</b>.</p>
+					<p>Stored in <b>contiguous memory</b>.</p>
 				</section>
 
-				<!-- SLIDE 6 -->
 				<section>
 					<h2>Memory Layout Example</h2>
 					<pre>
 address: x   x+1 x+2 x+3 x+4 x+5 x+6
 contents: 79          ; 'y'
-          47 62       ; 25159 → 6247h (little-endian)
+          47 62       ; 25159 → 6247h
           4F 86 5A 20 ; DD
   </pre>
 				</section>
 
-				<!-- QUIZ 3 -->
+				<!-- Quiz 6: TIMES Directive -->
 				<section>
-					<h2>Quiz 3 — Little Endian</h2>
-					<p>How is the 16-bit value <b>25159</b> stored?</p>
-					<select id="q5">
+					<h2>Quiz 6: TIMES Directive</h2>
+					<p>Create array of 5 bytes initialized to 0:</p>
+					<select id="times-array">
 						<option value="">Select</option>
-						<option value="4762">47 62</option>
-						<option value="6247">62 47</option>
+						<option value="times">TIMES 5 DB 0</option>
+						<option value="resb">RESB 5</option>
+						<option value="wrong">DB 5 TIMES 0</option>
 					</select>
-
-					<button onclick="check3()">Check</button>
-					<p id="r3"></p>
+					<button id="check-times">Check</button>
+					<p id="result-times" style="font-weight:bold; margin-top:10px;"></p>
 				</section>
 
-				<!-- SLIDE 7 -->
 				<section>
-					<h2>Abbreviated Definitions</h2>
-					<pre>
-message DB 'W','E','L','C','O','M','E','!'
-; OR
-message DB 'WELCOME!'
-  </pre>
+					<h2>Symbol Table</h2>
+					<p>The <strong>assembler</strong> automatically tracks every <em>variable</em> and <em>label</em>
+						you define.</p>
+					<p>It stores their <strong>memory offset</strong> (in bytes) from the start of the data/code
+						section.</p>
+					<p style="font-size: 0.8em; margin-top: 20px;">Think of it as a <strong>phonebook</strong> for your
+						program’s names.</p>
 				</section>
 
-				<!-- SLIDE 8 -->
 				<section>
-					<h2>Expressions</h2>
-					<p>The assembler computes expressions at assembly time.</p>
-					<pre>
-max_marks DW 7*25  ; = 175
-  </pre>
+					<h2>Symbol Table Example</h2>
+					<pre><code class="hljs" style="font-size: 0.9em;">
+value   DW 0      ; 2 bytes
+sum     DD 0      ; 4 bytes
+flag    DB 1      ; 1 byte
+  </code></pre>
+					<table style="margin-top: 20px; font-size: 0.9em;">
+						<tr>
+							<th>Symbol</th>
+							<th>Offset</th>
+						</tr>
+						<tr>
+							<td>value</td>
+							<td>0</td>
+						</tr>
+						<tr>
+							<td>sum</td>
+							<td>2</td>
+						</tr>
+						<tr>
+							<td>flag</td>
+							<td>6</td>
+						</tr>
+					</table>
+					<p style="margin-top: 15px; font-size: 0.8em;"><strong>Why?</strong> 0 → 2 → 6 (2 + 4 = 6)</p>
 				</section>
 
-				<!-- SLIDE 9 -->
-				<section>
-					<h2>Multiple Initializations — TIMES</h2>
-					<pre>
-marks TIMES 8 DW 0
-  </pre>
-					<p>Creates 8 words initialized to 0.</p>
-				</section>
-
-				<!-- QUIZ 4 -->
-				<section>
-					<h2>Quiz 4 — TIMES</h2>
-					<p>Which directive creates an array of 5 bytes initialized to 0?</p>
-
-					<select id="q6">
-						<option value="">Select</option>
-						<option value="times5db0">TIMES 5 DB 0</option>
-						<option value="db5times0">DB 5 TIMES 0</option>
-						<option value="resb5">RESB 5</option>
-					</select>
-
-					<button onclick="check4()">Check</button>
-					<p id="r4"></p>
-				</section>
-
-				<!-- SLIDE 10 -->
 				<section>
 					<h2>Symbol Table</h2>
 					<pre>
@@ -2100,11 +1974,9 @@ marks  TIMES 10 DW 0
 message DB 'The grade is:',0
 char1   DB ?
   </pre>
-
-					<p>Assembler assigns offsets based on bytes.</p>
+					<p>Offsets assigned in bytes.</p>
 				</section>
 
-				<!-- SLIDE 11 -->
 				<section>
 					<h2>Symbol Table Output</h2>
 					<pre>
@@ -2116,95 +1988,567 @@ char1   → offset 40
   </pre>
 				</section>
 
-				<!-- QUIZ 5 -->
+				<!-- Quiz 7: Symbol Table Offset -->
 				<section>
-					<h2>Quiz 5 — Symbol Table</h2>
-					<p>If <code>a DW 0</code> and <code>b DD 0</code> and <code>c DB 0</code>, what is the offset of c?
+					<h2>Quiz 7: Symbol Table Offset</h2>
+					<p>Given: <code>a DW 0</code>, <code>b DD 0</code>, <code>c DB 0</code> → offset of <code>c</code>?
 					</p>
+					<input type="number" id="offset-c" placeholder="e.g. 6" style="width: 80px;">
+					<button id="check-offset">Check</button>
+					<p id="result-offset" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+			</section>
 
-					<select id="q7">
-						<option value="">Select</option>
-						<option value="7">7</option>
-						<option value="6">6</option>
-						<option value="2">2</option>
-					</select>
+			<!-- Master JavaScript (All Quizzes) -->
+			<script>
+				document.addEventListener('DOMContentLoaded', function () {
+					// Quiz: Statement Types
+					document.getElementById('check-stmt-types')?.addEventListener('click', () => {
+						const s1 = document.getElementById('stmt-type-1').value;
+						const s2 = document.getElementById('stmt-type-2').value;
+						const s3 = document.getElementById('stmt-type-3').value;
+						const r = document.getElementById('result-stmt-types');
+						if (s1 === 'executable' && s2 === 'directive' && s3 === 'macro') {
+							r.textContent = 'Correct! Well identified.'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. Try again.'; r.style.color = 'red';
+						}
+					});
 
-					<button onclick="check5()">Check</button>
-					<p id="r5"></p>
+					// Quiz 1: Directive Sizes
+					document.getElementById('check-dir-sizes')?.addEventListener('click', () => {
+						const d1 = document.getElementById('dir-char').value;
+						const d2 = document.getElementById('dir-int').value;
+						const d3 = document.getElementById('dir-word').value;
+						const r = document.getElementById('result-dir-sizes');
+						if (d1 === 'db' && d2 === 'dd' && d3 === 'dw') {
+							r.textContent = 'Correct!'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. DB=1, DW=2, DD=4 bytes.'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 2: Little-Endian
+					document.getElementById('check-little-endian')?.addEventListener('click', () => {
+						const input = document.getElementById('little-endian-input').value.trim().toUpperCase();
+						const r = document.getElementById('result-little-endian');
+						if (input === '47 62') {
+							r.textContent = 'Correct! LSB first.'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. Try 47 62'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 3: Negative 2's Complement
+					document.getElementById('check-neg-2s')?.addEventListener('click', () => {
+						const input = document.getElementById('neg-2s-input').value.trim().toUpperCase();
+						const r = document.getElementById('result-neg-2s');
+						if (input === 'B9 8D') {
+							r.textContent = 'Correct! 2\'s complement.'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. Try B9 8D'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 4: FP & Range
+					document.getElementById('check-fp-range')?.addEventListener('click', () => {
+						const fp = document.getElementById('fp64').value;
+						const range = document.getElementById('range-byte').value;
+						const r = document.getElementById('result-fp-range');
+						if (fp === 'dq' && range === 'db') {
+							r.textContent = 'Correct!'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect.'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 5: Reserve
+					document.getElementById('check-reserve')?.addEventListener('click', () => {
+						const w = document.getElementById('res-words').value;
+						const d = document.getElementById('res-dword').value;
+						const r = document.getElementById('result-reserve');
+						if (w === 'resw' && d === 'resd') {
+							r.textContent = 'Correct!'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect.'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 6: TIMES
+					document.getElementById('check-times')?.addEventListener('click', () => {
+						const val = document.getElementById('times-array').value;
+						const r = document.getElementById('result-times');
+						if (val === 'times') {
+							r.textContent = 'Correct!'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. Use TIMES 5 DB 0'; r.style.color = 'red';
+						}
+					});
+
+					// Quiz 7: Offset
+					document.getElementById('check-offset')?.addEventListener('click', () => {
+						const val = document.getElementById('offset-c').value;
+						const r = document.getElementById('result-offset');
+						if (val === '6') {
+							r.textContent = 'Correct! DW=2, DD=4 → 2+4=6'; r.style.color = 'green';
+						} else {
+							r.textContent = 'Incorrect. 2 + 4 = 6'; r.style.color = 'red';
+						}
+					});
+				});
+			</script>
+
+			<section>
+				<!-- ==================== WHERE ARE THE OPERANDS? ==================== -->
+				<section>
+					<h2>Where Are the Operands?</h2>
+					<p>Every instruction needs <strong>data</strong> to work on.</p>
+					<p style="margin-top: 20px; font-size: 0.9em;">Question: <em>Where is the data?</em></p>
+					<p style="color: #4CAF50; font-weight: bold;">Answer: In 4 possible places!</p>
 				</section>
 
+				<!-- Slide: 4 Places -->
+				<section>
+					<h2>4 Places for Operands</h2>
+					<ol style="font-size: 0.9em;">
+						<li>In a <strong>register</strong> (CPU)</li>
+						<li>In the <strong>instruction itself</strong></li>
+						<li>In <strong>memory</strong> (data segment)</li>
+						<li>At an <strong>I/O port</strong> (later)</li>
+					</ol>
+					<p style="margin-top: 30px; color: #FF9800;">We focus on 1–3 today</p>
+				</section>
+
+				<!-- ==================== 1. REGISTER ADDRESSING ==================== -->
+				<section>
+					<h2>1. Register Addressing</h2>
+					<p>Data is <strong>inside the CPU</strong> → Fastest!</p>
+					<pre><code class="hljs" style="font-size: 0.85em;">
+mov EAX, EBX
+  </code></pre>
+					<p style="margin-top: 15px;">Copies EBX → EAX</p>
+					<p style="color: #4CAF50;">No memory access</p>
+				</section>
+
+				<section>
+					<h3>Register Examples</h3>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+mov BX, CX     ; 16-bit
+mov AL, CL     ; 8-bit
+mov EDX, EAX   ; 32-bit
+  </code></pre>
+					<p style="font-size: 0.8em; margin-top: 20px;">All operands are in <strong>registers</strong></p>
+				</section>
+
+				<section>
+					<h3>Quiz: Register Addressing</h3>
+					<p>Which uses <strong>register addressing</strong>?</p>
+					<select id="quiz-reg-1">
+						<option value="">Select</option>
+						<option value="yes">mov EAX, EBX</option>
+						<option value="no">mov EAX, 100</option>
+						<option value="no">mov EAX, [var]</option>
+					</select>
+					<br><br>
+					<select id="quiz-reg-2">
+						<option value="">Select</option>
+						<option value="no">mov [mem], EAX</option>
+						<option value="yes">mov ECX, EDX</option>
+					</select>
+					<button id="check-reg">Check</button>
+					<p id="result-reg" style="margin-top: 10px; font-weight: bold;"></p>
+				</section>
+
+				<!-- ==================== 2. IMMEDIATE ADDRESSING ==================== -->
+				<section>
+					<h2>2. Immediate Addressing</h2>
+					<p>Data is <strong>part of the instruction</strong></p>
+					<pre><code class="hljs" style="font-size: 0.85em;">
+mov AL, 75
+  </code></pre>
+					<p style="margin-top: 15px;">75 is <strong>inside</strong> the instruction</p>
+					<p style="color: #2196F3;">Always a <strong>constant</strong></p>
+				</section>
+
+				<section>
+					<h3>Immediate Examples</h3>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+mov EAX, 42
+mov BX, -5
+mov CL, 'A'
+  </code></pre>
+					<p style="font-size: 0.8em; margin-top: 20px;">Can only be <strong>source</strong>, not destination
+					</p>
+				</section>
+
+				<!-- Quiz: Immediate Mode (FIXED) -->
+				<section>
+					<h3>Quiz: Immediate Mode</h3>
+					<p>Type the missing number to load 100 into EAX:</p>
+
+					<div
+						style="background:#1e1e1e; padding:15px; border-radius:8px; font-family:monospace; color:#d4d4d4; font-size:0.9em;">
+						mov EAX,
+						<input type="text" id="imm-input" placeholder="???" style="width:70px; font-family:monospace; font-size:1em; 
+                  background:#2d2d2d; color:#d4d4d4; border:none; 
+                  border-bottom:2px solid #569cd6; outline:none; text-align:center;">
+					</div>
+
+					<p style="margin-top:15px; color:#ccc;"><em>Should load 100 into EAX</em></p>
+					<button id="check-imm" style="margin-top:10px;">Check</button>
+					<p id="result-imm" style="margin-top:10px; font-weight:bold;"></p>
+				</section>
+
+				<!-- ==================== 3. MEMORY ADDRESSING ==================== -->
+				<section>
+					<h2>3. Memory Addressing</h2>
+					<p>Data is in <strong>RAM</strong> (data segment)</p>
+					<p style="color: #F44336;">Slower than registers</p>
+					<p style="margin-top: 20px;">We need: <strong>Segment + Offset</strong></p>
+					<p style="font-size: 0.8em;">DS register has segment → we give <strong>offset</strong></p>
+				</section>
+
+				<!-- Direct Addressing -->
+				<section>
+					<h2>Direct Addressing</h2>
+					<p>Use <strong>variable name</strong> → offset</p>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+response DB 'Y'
+...
+mov AL, [response]   ; AL = 'Y'
+  </code></pre>
+					<p style="color: #4CAF50;">[ ] means "go to memory"</p>
+				</section>
+
+				<section>
+					<h3>Direct Addressing Examples</h3>
+					<pre><code class="hljs" style="font-size: 0.75em;">
+table1 TIMES 20 DD 0
+...
+mov [table1], 56     ; table1[0] = 56
+mov EBX, [table1]    ; EBX = first value
+  </code></pre>
+					<p style="font-size: 0.8em;">NASM: <code>mov EBX, table1</code> → address</p>
+				</section>
+
+				<section>
+					<h3>Quiz: Direct Addressing</h3>
+					<p>Fix the code to store 'N':</p>
+					<div
+						style="background:#1e1e1e; padding:15px; border-radius:8px; font-family:monospace; color:#d4d4d4; font-size:0.9em;">
+						response DB 'Y'<br>
+						mov &nbsp;
+						<input type="text" id="direct-dest" placeholder="???" style="width:70px; font-family:monospace; font-size:1em; 
+                  background:#2d2d2d; color:#d4d4d4; border:none; 
+                  border-bottom:2px solid #569cd6; outline:none; text-align:center;">, 'N'
+					</div>
+
+
+					<button id="check-direct">Check</button>
+					<p id="result-direct" style="font-weight: bold;"></p>
+				</section>
+
+				<!-- Indirect Addressing -->
+				<section>
+					<h2>Indirect Addressing</h2>
+					<p><strong>Offset is in a register</strong></p>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+mov EBX, table1
+mov [EBX], 100
+  </code></pre>
+					<p>EBX acts like a <strong>pointer</strong></p>
+				</section>
+
+				<section>
+					<h3>Access Array Elements</h3>
+					<pre><code class="hljs" style="font-size: 0.75em;">
+mov EBX, table1
+mov [EBX], 100     ; table1[0]
+add EBX, 4
+mov [EBX], 99      ; table1[1]
+  </code></pre>
+					<p style="color: #FF9800;">+4 because DD = 4 bytes</p>
+				</section>
+
+				<section>
+					<h3>Quiz: Indirect Array</h3>
+					<p>Set <code>table1[2] = 200</code></p>
+					<div
+						style="background:#1e1e1e; padding:15px; border-radius:8px; font-family:monospace; color:#d4d4d4; font-size:0.9em;">
+						mov EBX, table1<br>
+						add EBX,
+						<input type="text" id="indirect-offset" placeholder="???" style="width:70px; font-family:monospace; font-size:1em; 
+                  background:#2d2d2d; color:#d4d4d4; border:none; 
+                  border-bottom:2px solid #569cd6; outline:none; text-align:center;">
+						<br>
+						mov [EBX], 200
+					</div>
+
+					<button id="check-indirect">Check</button>
+					<p id="result-indirect" style="font-weight: bold;"></p>
+				</section>
+
+				<!-- lea vs mov -->
+				<section>
+					<h2>lea = Load Effective Address</h2>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+lea EBX, [table1]     ; EBX = address
+mov EBX, table1       ; same, but faster
+  </code></pre>
+					<p style="font-size: 0.8em;">Use <code>mov</code> when possible</p>
+				</section>
+
+				<section>
+					<h2>When LEA is Used</h2>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+lea EAX, [EBX + 8]        ; pointer arithmetic
+lea ECX, [EDI + ESI*4]    ; scaled index
+lea EDX, [table1 + 16]    ; offset inside structures
+    </code></pre>
+					<p style="font-size: 0.8em;">
+						Pentium can compute complex address expressions only using <code>LEA</code>,
+						not with <code>MOV</code>.
+					</p>
+				</section>
+
+				<section>
+					<h2>When MOV Is Better</h2>
+					<ul style="font-size: 0.85em;">
+						<li>When loading a simple address:</li>
+						<pre><code class="hljs" style="font-size: 0.8em;">
+mov EBX, table1        ; faster & simpler
+        </code></pre>
+						<li>When copying registers:</li>
+						<pre><code class="hljs" style="font-size: 0.8em;">
+mov ECX, EDX           ; ideal for Pentium
+        </code></pre>
+						<li>When loading immediate values:</li>
+						<pre><code class="hljs" style="font-size: 0.8em;">
+mov EAX, 100
+        </code></pre>
+						<li>MOV = fastest instruction for simple data movement on Pentium</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>LEA vs MOV: Pentium Cost</h2>
+					<ul style="font-size: 0.85em;">
+						<li><b>MOV reg, label</b></li>
+						<ul>
+							<li>1 cycle (fastest)</li>
+						</ul>
+
+						<li><b>LEA reg, [label]</b></li>
+						<ul>
+							<li>1 cycle (same speed)</li>
+							<li>No memory read → avoids cache penalties</li>
+						</ul>
+
+						<li><b>LEA reg, [reg + reg*scale]</b></li>
+						<ul>
+							<li>1 cycle → Pentium has a dedicated AGU (Address Generation Unit)</li>
+							<li>Equivalent MOV+ADD sequence = 3 cycles</li>
+						</ul>
+					</ul>
+				</section>
+
+
+
+
+				<!-- Mixed Mode -->
+				<section>
+					<h2>Mixed Mode Example</h2>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+mov AL, 75           ; immediate → register
+mov [response], AL   ; register → memory
+  </code></pre>
+					<p style="color: #9C27B0;">Combines modes</p>
+				</section>
+
+				<!-- Big Quiz: Identify Mode -->
+				<section>
+					<h2>Big Quiz: Identify Addressing Mode</h2>
+					<p>For each instruction, pick the mode:</p>
+					<ol style="font-size: 0.8em;">
+						<li><code>mov EAX, EBX</code>
+							<select id="mode-1">
+								<option value="">?</option>
+								<option>Register</option>
+								<option>Immediate</option>
+								<option>Direct</option>
+								<option>Indirect</option>
+							</select>
+						</li>
+						<li><code>mov ECX, 10</code>
+							<select id="mode-2">
+								<option value="">?</option>
+								<option>Register</option>
+								<option>Immediate</option>
+								<option>Direct</option>
+								<option>Indirect</option>
+							</select>
+						</li>
+						<li><code>mov [var], 5</code>
+							<select id="mode-3">
+								<option value="">?</option>
+								<option>Register</option>
+								<option>Immediate</option>
+								<option>Direct</option>
+								<option>Indirect</option>
+							</select>
+						</li>
+						<li><code>mov EBX, table1</code>
+							<select id="mode-4">
+								<option value="">?</option>
+								<option>Register</option>
+								<option>Immediate</option>
+								<option>Direct</option>
+								<option>Indirect</option>
+							</select>
+						</li>
+						<li><code>mov [EBX], 99</code>
+							<select id="mode-5">
+								<option value="">?</option>
+								<option>Register</option>
+								<option>Immediate</option>
+								<option>Direct</option>
+								<option>Indirect</option>
+							</select>
+						</li>
+					</ol>
+					<button id="check-big">Check All</button>
+					<p id="result-big" style="font-weight: bold; margin-top: 10px;"></p>
+				</section>
+
+				<!-- Summary -->
+				<section>
+					<h2>Summary: Addressing Modes</h2>
+					<table style="font-size: 0.85em; margin: auto;">
+						<tr>
+							<th>Mode</th>
+							<th>Data Location</th>
+							<th>Example</th>
+						</tr>
+						<tr>
+							<td>Register</td>
+							<td>CPU Register</td>
+							<td><code>mov EAX, EBX</code></td>
+						</tr>
+						<tr>
+							<td>Immediate</td>
+							<td>In Instruction</td>
+							<td><code>mov AL, 75</code></td>
+						</tr>
+						<tr>
+							<td>Direct</td>
+							<td>Memory (by name)</td>
+							<td><code>mov [var], 1</code></td>
+						</tr>
+						<tr>
+							<td>Indirect</td>
+							<td>Memory (by register)</td>
+							<td><code>mov [EBX], 99</code></td>
+						</tr>
+					</table>
+				</section>
+
+				<!-- Final Quiz: Write Code -->
+				<section>
+					<h2>Final Challenge</h2>
+					<p>Write code to set <code>scores[3] = 95</code></p>
+					<p>Given: <code>scores TIMES 10 DD 0</code></p>
+					<textarea id="final-code"
+						style="width: 100%; height: 120px; font-family: monospace; font-size: 0.8em;">
+mov EBX, scores
+add EBX, ??
+mov [EBX], 95
+  </textarea>
+					<button id="check-final">Check</button>
+					<p id="result-final" style="font-weight: bold;"></p>
+				</section>
+
+				<!-- ==================== JAVASCRIPT ==================== -->
 				<script>
-					// get all elements
-					let q1 = document.getElementById("q1");
-					let q2 = document.getElementById("q2");
-					let r1 = document.getElementById("r1");
+					document.addEventListener('DOMContentLoaded', function () {
+						// Quiz: Register
+						document.getElementById('check-reg')?.addEventListener('click', () => {
+							const a1 = document.getElementById('quiz-reg-1').value;
+							const a2 = document.getElementById('quiz-reg-2').value;
+							const r = document.getElementById('result-reg');
+							if (a1 === 'yes' && a2 === 'yes') {
+								r.textContent = 'Correct! Both are register mode.'; r.style.color = 'green';
+							} else {
+								r.textContent = 'Try again. Register = both in CPU.'; r.style.color = 'red';
+							}
+						});
 
-					let q3 = document.getElementById("q3");
-					let q4 = document.getElementById("q4");
-					let r2 = document.getElementById("r2");
+						// Quiz: Immediate
+						document.getElementById('check-imm')?.addEventListener('click', () => {
+							const val = document.getElementById('imm-input').value.trim();
+							const r = document.getElementById('result-imm');
+							if (val === '100') {
+								r.textContent = 'Correct!'; r.style.color = 'green';
+							} else {
+								r.textContent = 'No — use 100'; r.style.color = 'red';
+							}
+						});
 
-					let q5 = document.getElementById("q5");
-					let r3 = document.getElementById("r3");
+						// Quiz: Direct
+						document.getElementById('check-direct')?.addEventListener('click', () => {
+							const val = document.getElementById('direct-dest').value.trim();
+							const r = document.getElementById('result-direct');
+							if (val === '[response]' || val === '[ response ]') {
+								r.textContent = 'Correct! Use [ ] for memory.'; r.style.color = 'green';
+							} else {
+								r.textContent = 'Use [response]'; r.style.color = 'red';
+							}
+						});
 
-					let q6 = document.getElementById("q6");
-					let r4 = document.getElementById("r4");
+						// Quiz: Indirect
+						document.getElementById('check-indirect')?.addEventListener('click', () => {
+							const val = document.getElementById('indirect-offset').value;
+							const r = document.getElementById('result-indirect');
+							if (val === '8') {
+								r.textContent = 'Correct! 2 × 4 = 8'; r.style.color = 'green';
+							} else {
+								r.textContent = 'Hint: index 2 → 2×4 = 8'; r.style.color = 'red';
+							}
+						});
 
-					let q7 = document.getElementById("q7");
-					let r5 = document.getElementById("r5");
+						// Big Quiz
+						document.getElementById('check-big')?.addEventListener('click', () => {
+							const answers = {
+								'mode-1': 'Register',
+								'mode-2': 'Immediate',
+								'mode-3': 'Direct',
+								'mode-4': 'Direct',
+								'mode-5': 'Indirect'
+							};
+							let correct = 0;
+							let total = 5;
+							for (let i = 1; i <= total; i++) {
+								if (document.getElementById('mode-' + i).value === answers['mode-' + i]) correct++;
+							}
+							const r = document.getElementById('result-big');
+							if (correct === total) {
+								r.textContent = 'Perfect! All correct.'; r.style.color = 'green';
+							} else {
+								r.textContent = `Got ${correct}/${total}. Review modes.`; r.style.color = 'red';
+							}
+						});
 
-					// Quiz functions
-					function check1() {
-						if (q1.value.toLowerCase() === "dq" && q2.value.toLowerCase() === "db") {
-							r1.textContent = "✅ Correct!";
-							r1.style.color = "lightgreen";
-						} else {
-							r1.textContent = "❌ Try again.";
-							r1.style.color = "red";
-						}
-					}
-
-					function check2() {
-						if (q3.value.toLowerCase() === "resw" && q4.value.toLowerCase() === "resd") {
-							r2.textContent = "✅ Correct!";
-							r2.style.color = "lightgreen";
-						} else {
-							r2.textContent = "❌ Incorrect.";
-							r2.style.color = "red";
-						}
-					}
-
-					function check3() {
-						if (q5.value === "4762") {
-							r3.textContent = "Correct — Little endian stores LSB first.";
-							r3.style.color = "lightgreen";
-						} else {
-							r3.textContent = "Incorrect.";
-							r3.style.color = "red";
-						}
-					}
-
-					function check4() {
-						if (q6.value === "times5db0") {
-							r4.textContent = "Correct!";
-							r4.style.color = "lightgreen";
-						} else {
-							r4.textContent = "Incorrect.";
-							r4.style.color = "red";
-						}
-					}
-
-					function check5() {
-						if (q7.value === "6") {
-							r5.textContent = "Correct!";
-							r5.style.color = "lightgreen";
-						} else {
-							r5.textContent = "Incorrect.";
-							r5.style.color = "red";
-						}
-					}
-
+						// Final Challenge
+						document.getElementById('check-final')?.addEventListener('click', () => {
+							const code = document.getElementById('final-code').value;
+							const r = document.getElementById('result-final');
+							if (code.includes('add EBX, 12') || code.includes('add EBX,12')) {
+								r.textContent = 'Correct! 3 × 4 = 12'; r.style.color = 'green';
+							} else {
+								r.textContent = 'Use add EBX, 12 (3×4)'; r.style.color = 'red';
+							}
+						});
+					});
 				</script>
-
 			</section>
 
 
