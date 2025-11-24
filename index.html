@@ -2551,6 +2551,1252 @@ mov [EBX], 95
 				</script>
 			</section>
 
+			<section>
+				<!-- ==================== Data Transfer Instructions ==================== -->
+				<section>
+					<h2>Data Transfer Instructions</h2>
+					<p class="fragment">Today we cover the three most common ones on Pentium:</p>
+					<ul style="margin-top: 30px; font-size: 0.9em;">
+						<li class="fragment">MOV → copy data</li>
+						<li class="fragment">XCHG → swap data</li>
+						<li class="fragment">XLAT → table lookup (translate)</li>
+					</ul>
+					<p class="fragment" style="margin-top: 40px; color: #FF9800; font-weight: bold;">Let’s start with
+						the MOV</p>
+				</section>
+
+				<!-- ==================== The MOV Instruction ==================== -->
+				<section>
+					<h2>The MOV Instruction</h2>
+					<p style="font-size: 1.1em;"><code>mov destination, source</code></p>
+					<p class="fragment" style="margin-top: 20px;">Copies source → destination<br><strong>Source is NOT
+							changed</strong></p>
+					<p class="fragment" style="color: #4CAF50; margin-top: 30px;">Both operands must be the <strong>same
+							size</strong></p>
+				</section>
+
+				<section>
+					<h2>5 Allowed Forms of MOV</h2>
+					<table style="font-size: 0.85em; margin: auto;">
+						<tr>
+							<th>Form</th>
+							<th>Example</th>
+						</tr>
+						<tr>
+							<td>reg ← reg</td>
+							<td><code>mov EAX, EBX</code></td>
+						</tr>
+						<tr>
+							<td>reg ← immediate</td>
+							<td><code>mov ECX, 100</code></td>
+						</tr>
+						<tr>
+							<td>mem ← immediate</td>
+							<td><code>mov BYTE [flag], 1</code></td>
+						</tr>
+						<tr>
+							<td>reg ← mem</td>
+							<td><code>mov EDX, [total]</code></td>
+						</tr>
+						<tr>
+							<td>mem ← reg</td>
+							<td><code>mov [result], EAX</code></td>
+						</tr>
+					</table>
+					<p style="margin-top: 30px; color: #F44336;">Memory → Memory is <strong>NOT allowed</strong></p>
+				</section>
+
+				<section>
+					<h3>MOV Examples (Variety)</h3>
+					<pre><pre><code class="hljs" style="font-size: 0.8em;">
+mov AL, 'A'          ; immediate → 8-bit reg
+mov BX, 5000h        ; immediate → 16-bit reg
+mov EDX, 0FFFFFFFFh   ; immediate → 32-bit reg
+
+mov [count], 0       ; immediate → memory (with type!)
+mov BH, CL           ; 8-bit register → register
+mov ESI, [table1]    ; memory → register
+mov [name1+4], 'K'   ; register → memory offset
+    </code></pre>
+				</section>
+
+				<section>
+					<h3>Quick Quiz: Valid or Invalid?</h3>
+					<p>Which of these are <strong>legal</strong> MOV instructions?</p>
+					<select id="q1">
+						<option value="">Select</option>
+						<option>mov EAX, EBX</option>
+						<option>mov [var1], [var2]</option>
+						<option>mov AL, 300</option>
+					</select>
+					<br><br>
+					<select id="q2">
+						<option value="">Select</option>
+						<option>mov BYTE [flag], 1</option>
+						<option>mov DS, AX</option>
+						<option>mov [EBX], EAX</option>
+					</select>
+					<button id="check-mov1">Check</button>
+					<p id="res-mov1" style="margin-top:10px; font-weight:bold;"></p>
+				</section>
+
+				<!-- ==================== Ambiguous Moves & Type Specifiers ==================== -->
+				<section>
+					<h2>Ambiguous Moves</h2>
+					<p>Sometimes the assembler doesn’t know the size…</p>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+mov [EBX], 100     ; Is 100 a BYTE or WORD or DWORD?
+    </code></pre>
+					<p class="fragment" style="color: #FF5722C;">Error or wrong size!</p>
+				</section>
+
+				<section>
+					<h2>Solution: Type Specifiers</h2>
+					<table style="font-size: 0.9em;">
+						<tr>
+							<th>Specifier</th>
+							<th>Size</th>
+						</tr>
+						<tr>
+							<td>BYTE</td>
+							<td>1 byte</td>
+						</tr>
+						<tr>
+							<td>WORD</td>
+							<td>2 bytes</td>
+						</tr>
+						<tr>
+							<td>DWORD</td>
+							<td>4 bytes</td>
+						</tr>
+						<tr>
+							<td>QWORD</td>
+							<td>8 bytes</td>
+						</tr>
+						<tr>
+							<td>TBYTE</td>
+							<td>10 bytes</td>
+						</tr>
+					</table>
+					<pre class="fragment" style="margin-top:20px;"><code class="hljs" style="font-size: 0.8em;">
+mov BYTE  [EBX], 100    ; safe
+mov WORD  [ESI], 100
+mov DWORD [EDI], 100
+    </code></pre>
+				</section>
+
+				<!-- ==================== Type Specifier Quiz (Fixed & Clean) ==================== -->
+				<section>
+					<h2>Type Specifier Quiz</h2>
+					<p>Fix the line to store the number <strong>65</strong> as a <strong>byte</strong> in memory:</p>
+
+					<div
+						style="background:#1e1e1e; padding:25px; border-radius:12px; margin:30px auto; width:85%; font-family:monospace; font-size:1.1em; color:#d4d4d4; text-align:center;">
+						mov <input type="text" id="type-part" placeholder="BYTE"
+							style="width:100px; padding:8px; font-family:monospace; font-size:1em; background:#0d47a1; color:white; border:none; border-radius:6px; text-align:center;">
+						[score],
+						<input type="text" id="value-part" placeholder="65" value="65"
+							style="width:80px; padding:8px; font-family:monospace; font-size:1em; background:#1565c0; color:white; border:none; border-radius:6px; text-align:center; margin-left:10px;">
+					</div>
+
+					<button id="check-type-quiz" style="margin-top:20px; padding:10px 20px; font-size:1em;">Check
+						Answer</button>
+					<p id="result-type" style="margin-top:20px; font-weight:bold; font-size:1.2em;"></p>
+				</section>
+
+				<script>
+					document.addEventListener('DOMContentLoaded', () => {
+						document.getElementById('check-type-quiz').addEventListener('click', () => {
+							const typeInput = document.getElementById('type-part').value.trim();
+							const valueInput = document.getElementById('value-part').value.trim();
+							const result = document.getElementById('result-type');
+
+							const typeOk = ['BYTE', 'byte', 'Byte'].includes(typeInput);
+							const valueOk = valueInput === '65';
+
+							if (typeOk && valueOk) {
+								result.textContent = 'Perfect! mov BYTE [score], 65';
+								result.style.color = '#4caf50';
+							} else {
+								result.textContent = 'Use BYTE and 65';
+								result.style.color = '#f44336';
+							}
+						});
+
+						// Optional: press Enter to check
+						['type-part', 'value-part'].forEach(id => {
+							document.getElementById(id).addEventListener('keypress', e => {
+								if (e.key === 'Enter') document.getElementById('check-type-quiz').click();
+							});
+						});
+					});
+				</script>
+
+				<!-- ==================== XCHG Instruction ==================== -->
+				<section>
+					<h2>The XCHG Instruction</h2>
+					<p><code>xchg operand1, operand2</code></p>
+					<p class="fragment" style="margin-top:20px; color:#4CAF50;">Swaps the contents of two operands</p>
+					<p class="fragment" style="margin-top:30px;">Sizes: 8-bit, 16-bit, or 32-bit</p>
+				</section>
+
+				<section>
+					<h3>XCHG Examples</h3>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+xchg EAX, EDX          ; swap two 32-bit registers
+xchg AL, BL            ; swap bytes
+xchg [total], DX       ; swap memory word with DX
+xchg AH, [flag]        ; high byte of AX ↔ memory byte
+    </code></pre>
+					<p style="color:#F44336;">Memory ↔ Memory → <strong>illegal</strong></p>
+				</section>
+
+				<section>
+					<h3>Why XCHG is Awesome</h3>
+					<p>Swap without a temporary register!</p>
+					<pre><code class="hljs" style="font-size: 0.75em;">
+; Old way (3 instructions)
+mov  ECX, EAX
+mov  EAX, EDX
+mov  EDX, ECX
+
+; New way (1 instruction!)
+xchg EAX, EDX
+    </code></pre>
+					<p style="color:#4CAF50;">Perfect for sorting algorithms</p>
+				</section>
+
+				<section>
+					<h3>Endian Conversion Trick</h3>
+					<pre><code class="hljs" style="font-size: 0.8em;">
+; Convert AX from little-endian ↔ big-endian
+xchg AL, AH
+    </code></pre>
+					<p class="fragment">For 32-bit → use <code>bswap EAX</code></p>
+				</section>
+
+				<section>
+					<h3>XCHG Quiz</h3>
+					<p>How many instructions to swap EAX and EBX using only MOV?</p>
+					<input type="text" id="xchg-count" placeholder="?"
+						style="width:60px; text-align:center; font-family:monospace;">
+					<button id="check-xchg">Check</button>
+					<p id="res-xchg" style="font-weight:bold;"></p>
+				</section>
+
+				<!-- ==================== XLAT – Part 1: What is it? ==================== -->
+				<section>
+					<h2>The XLAT Instruction</h2>
+					<p style="font-size:1.1em; margin:30px 0;"><code>xlatb</code> → "translate byte"</p>
+
+					<p style="font-style:italic; color:#81d4fa;">It turns a number into something else using a lookup
+						table</p>
+
+					<div style="margin:40px auto; text-align:center;">
+						<div
+							style="display:inline-block; background:#0d47a1; padding:20px; border-radius:12px; color:white; font-size:1.3em;">
+							AL = 5
+						</div>
+						<span style="font-size:2em; margin:0 30px;">→</span>
+						<div
+							style="display:inline-block; background:#1b5e20; padding:20px; border-radius:12px; color:white; font-size:1.3em;">
+							xlatb
+						</div>
+						<span style="font-size:2em; margin:0 30px;">→</span>
+						<div
+							style="display:inline-block; background:#2e7d32; padding:20px; border-radius:12px; color:white; font-size:1.3em;">
+							AL = 'F'
+						</div>
+					</div>
+
+					<p style="margin-top:40px; color:#ff9800;">Think: "What should 5 become? → look it up!</p>
+				</section>
+
+				<!-- ==================== XLAT – Part 2: How it works ==================== -->
+				<!-- ==================== XLAT – How it really works (perfectly visible) ==================== -->
+				<!-- ==================== XLAT – How It Works (Final Perfect Version) ==================== -->
+				<!-- XLAT – How It Works (100% safe for all screens) -->
+				<section>
+					<h3>How XLAT Works</h3>
+
+					<div style="background:#0d1117; color:#79c0ff; padding:12px; border-radius:8px;
+              font-family:monospace; font-size:1em; margin:15px auto; width:75%;">
+						hex_table DB '0123456789ABCDEF'
+					</div>
+
+					<p style="text-align:center; font-size:1em; color:#8be9fd; margin:20px 0 10px;">
+						EBX = address of the table
+					</p>
+
+					<!-- Smaller arrow and reduced spacing -->
+					<div style="text-align:center; font-size:1.5em; color:#ffd43b; margin:5px 0;">
+						↓
+					</div>
+
+					<div style="background:#1f6feb; color:white; padding:10px 16px; border-radius:8px;
+              font-family:monospace; font-size:1em; margin:15px auto; width:60%;">
+						mov EBX, hex_table
+					</div>
+
+					<div style="background:#161b22; color:#c9d1d9; padding:14px; border-radius:8px;
+              font-family:monospace; font-size:1em; margin:20px auto; width:70%;">
+						mov AL, 10 ; index 10 → 'A'<br>
+						<span style="color:#50fa7b; font-weight:bold;">xlatb</span> ; AL ← table[AL] = 'A'
+					</div>
+
+					<p style="text-align:center; font-size:1em; color:#ff79c6; margin-top:20px;">
+						Rule: <strong>xlatb</strong> → AL = table[AL]
+					</p>
+				</section>
+
+
+				<!-- ==================== XLAT – Part 3: Interactive Quiz ==================== -->
+				<section>
+					<h3>XLAT Quiz – Can You Do It?</h3>
+					<p>Complete the code so that after <code>xlatb</code>, AL contains <strong>'9'</strong></p>
+
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">
+digits_table  DB '012345359638345'
+
+    mov  EBX, <input type="text" id="ans1" placeholder="???" 
+                     style="width:140px; padding:6px; background:#0d47a1; color:white; border:none; border-radius:4px; text-align:center;">
+    mov  AL,  <input type="text" id="ans2" placeholder="???" 
+                     style="width:60px; padding:6px; background:#1565c0; color:white; border:none; border-radius:4px; text-align:center;">
+    xlatb
+  </pre>
+
+					<button id="check-xlat" style="margin-top:20px; padding:10px 20px; font-size:1em;">Check
+						Answer</button>
+					<p id="xlat-result" style="margin-top:20px; font-weight:bold; font-size:1.2em;"></p>
+				</section>
+
+				<script>
+					document.addEventListener('DOMContentLoaded', () => {
+						document.getElementById('check-xlat')?.addEventListener('click', () => {
+							const a1 = document.getElementById('ans1').value.trim();
+							const a2 = document.getElementById('ans2').value.trim();
+							const res = document.getElementById('xlat-result');
+
+							const ok1 = /digits?_?table/i.test(a1);
+							const ok2 = a2 === '8';
+
+							if (ok1 && ok2) {
+								res.textContent = 'Correct! AL becomes "9"';
+								res.style.color = '#4caf50';
+							} else {
+								res.textContent = 'EBX = digits_table, AL is the index of 9';
+								res.style.color = '#f44336';
+							}
+						});
+					});
+				</script>
+
+				<!-- ==================== XLAT Instruction ==================== -->
+				<section>
+					<h2>The XLAT Instruction Summary</h2>
+					<p style="margin-top:20px;">Replaces AL with table[AL]</p>
+					<ul style="font-size:0.9em;">
+						<li>EBX = base address of translation table</li>
+						<li>AL = index (0–255)</li>
+						<li>After xlatb → AL = table[old_AL]</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>XLAT Example – Hex to ASCII</h3>
+					<pre><code class="hljs" style="font-size: 0.75em;">
+hex_table DB 'ABCDEF0123456789'
+
+mov  EBX, hex_table
+mov  AL, 00h          ; we want 'A'
+xlatb                 ; AL ← 'A' (41h)
+    </code></pre>
+					<p>Common in old BIOS/video routines and checksum displays</p>
+				</section>
+
+
+				<!-- ==================== Summary ==================== -->
+				<section>
+					<h2>Summary Table</h2>
+					<table style="font-size: 0.88em; margin:auto;">
+						<tr>
+							<th>Instruction</th>
+							<th>Purpose</th>
+							<th>Key Restriction</th>
+						</tr>
+						<tr>
+							<td>MOV</td>
+							<td>Copy</td>
+							<td>No mem→mem, same size</td>
+						</tr>
+						<tr>
+							<td>XCHG</td>
+							<td>Swap</td>
+							<td>No mem↔mem</td>
+						</tr>
+						<tr>
+							<td>XLATB</td>
+							<td>Table lookup</td>
+							<td>Only 256-entry byte table</td>
+						</tr>
+					</table>
+				</section>
+
+
+				<!-- ==================== JavaScript for Quizzes ==================== -->
+				<script>
+					document.addEventListener('DOMContentLoaded', function () {
+
+						// MOV valid/invalid quiz
+						document.getElementById('check-mov1').onclick = function () {
+							const a1 = document.getElementById('q1').value;
+							const a2 = document.getElementById('q2').value;
+							const r = document.getElementById('res-mov1');
+							if (a1 === 'mov EAX, EBX' && (a2 === 'mov BYTE [flag], 1' || a2 === 'mov [EBX], EAX')) {
+								r.textContent = 'Correct!'; r.style.color = 'green';
+							} else {
+								r.textContent = 'One or both are illegal'; r.style.color = 'red';
+							}
+						};
+
+
+						// XCHG count quiz
+						document.getElementById('check-xchg').onclick = function () {
+							const v = document.getElementById('xchg-count').value.trim();
+							const r = document.getElementById('res-xchg');
+							if (v === '3') { r.textContent = 'Yes!'; r.style.color = 'green'; }
+							else { r.textContent = 'It takes 3 MOVs'; r.style.color = 'red'; }
+						};
+					});
+				</script>
+			</section>
+
+
+
+			<!-- ========================================================= -->
+			<!-- ===============  ARITHMETIC INSTRUCTIONS  =============== -->
+			<!-- ========================================================= -->
+			<section>
+
+				<!-- ==================== Title Slide ==================== -->
+				<section>
+					<h1>Arithmetic Instructions</h1>
+					<p style="margin-top:20px; font-size:1.2em;">INC • DEC • ADD • SUB • CMP</p>
+					<p class="fragment" style="color:#00e676; font-weight:bold; margin-top:40px;">
+						Fast operations used everywhere in Assembly
+					</p>
+				</section>
+
+				<!-- ==================== INC / DEC ==================== -->
+				<section>
+					<h2>INC & DEC</h2>
+					<p>INC → add 1<br>DEC → subtract 1</p>
+
+					<div style="margin-top:25px;">
+						<pre><code class="hljs" style="font-size:0.9em;">
+inc EBX      ; EBX = EBX + 1
+dec DL       ; DL = DL - 1
+      </code></pre>
+					</div>
+
+					<p class="fragment" style="color:#ff9800; margin-top:25px;">
+						❗ Immediate operands are NOT allowed (inc 5 → illegal)
+					</p>
+				</section>
+
+				<!-- INC/DEC Anim Example -->
+				<section>
+					<h3>Example: INC / DEC Simulation</h3>
+
+					<div style="background:#111; padding:20px; border-radius:10px; width:60%; margin:auto;">
+						<p style="font-family:monospace; font-size:1.1em; color:#80cbc4;">
+							EBX = <span id="ebx-val">1057h</span>
+						</p>
+
+						<button onclick="incEBX()" style="padding:10px 20px; margin-top:10px;">INC EBX</button>
+						<button onclick="decEBX()" style="padding:10px 20px; margin-left:10px;">DEC EBX</button>
+					</div>
+
+					<script>
+						let ebx = 0x1057;
+						function incEBX() {
+							ebx = (ebx + 1) & 0xFFFF;
+							document.getElementById("ebx-val").textContent = ebx.toString(16).toUpperCase() + "h";
+						}
+						function decEBX() {
+							ebx = (ebx - 1) & 0xFFFF;
+							document.getElementById("ebx-val").textContent = ebx.toString(16).toUpperCase() + "h";
+						}
+					</script>
+				</section>
+
+				<!-- INC/DEC Exercise -->
+				<section>
+					<h3>Exercise: What Happens?</h3>
+					<p style="font-size:1.1em;">EBX = FFFFh</p>
+
+					<p>After <b>inc EBX</b>, EBX = ?</p>
+
+					<input id="inc-q1" placeholder="Answer" style="padding:8px; text-align:center;">
+					<button onclick="checkINC()">Check</button>
+					<p id="inc-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkINC() {
+							let v = document.getElementById("inc-q1").value.trim().toLowerCase();
+							if (v === "0000h" || v === "0000") {
+								document.getElementById("inc-res").textContent = "Correct!";
+								document.getElementById("inc-res").style.color = "green";
+							} else {
+								document.getElementById("inc-res").textContent = "Nope! It wraps to 0000h";
+								document.getElementById("inc-res").style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== ADD Instruction ==================== -->
+				<section>
+					<h2>ADD Instruction</h2>
+					<p>Adds two same-sized operands</p>
+
+					<div style="margin-top:25px;">
+						<pre><code class="hljs" style="font-size:0.85em;">
+add AX, DX      ; AX = AX + DX
+add BL, CH      ; BL = BL + CH
+add [value], 10 ; memory = memory + 10
+      </code></pre>
+					</div>
+
+					<p class="fragment" style="color:#4caf50; margin-top:20px;">
+						INC EAX is same speed as ADD EAX,1 → but shorter!
+					</p>
+				</section>
+
+				<!-- ADD Table Exercise -->
+				<section>
+					<h3>ADD: Fill in the Result</h3>
+
+					<p>AX = 1052h, DX = AB62h</p>
+
+					<p style="margin-top:10px;">After <b>add AX, DX</b> → AX = ?</p>
+
+					<input id="add1" placeholder="Answer" style="padding:8px; text-align:center;">
+					<button onclick="checkADD()">Check</button>
+
+					<p id="add-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkADD() {
+							let v = document.getElementById("add1").value.trim().toLowerCase();
+							if (v === "bbb4h" || v === "bbb4") {
+								document.getElementById("add-res").textContent = "Correct!";
+								document.getElementById("add-res").style.color = "green";
+							} else {
+								document.getElementById("add-res").textContent = "Correct answer → BBB4h";
+								document.getElementById("add-res").style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== SUB Instruction ==================== -->
+				<section>
+					<h2>SUB Instruction</h2>
+					<p>Subtracts source from destination</p>
+
+					<pre><code class="hljs" style="font-size:0.85em;">
+sub AX, DX   ; AX = AX - DX
+sub BL, CH   ; BL = BL - CH
+      </code></pre>
+
+					<p class="fragment" style="color:#FF9800; margin-top:20px;">
+						Like ADD → sizes must match
+					</p>
+				</section>
+
+				<!-- SUB Exercise -->
+				<section>
+					<h3>SUB Exercise</h3>
+					<p>AX = 1052h, DX = AB62h</p>
+
+					<p>After <b>sub AX, DX</b> → AX = ?</p>
+
+					<input id="sub1" placeholder="Answer" style="padding:8px; text-align:center;">
+					<button onclick="checkSUB()">Check</button>
+					<p id="sub-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkSUB() {
+							let v = document.getElementById("sub1").value.trim().toLowerCase();
+							if (v === "64f0h" || v === "64f0") {
+								document.getElementById("sub-res").textContent = "Correct!";
+								document.getElementById("sub-res").style.color = "green";
+							} else {
+								document.getElementById("sub-res").textContent = "Correct answer → 64F0h";
+								document.getElementById("sub-res").style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== CMP Instruction ==================== -->
+				<section>
+					<h2>CMP Instruction</h2>
+					<p>cmp A, B → performs A - B but does <b>not store</b> the result.</p>
+
+					<div style="margin-top:25px;">
+						<pre><code class="hljs" style="font-size:0.85em;">
+cmp AX, BX    ; compare AX and BX
+je equal      ; jump if equal
+jg greater    ; jump if AX > BX
+      </code></pre>
+					</div>
+
+					<p class="fragment" style="color:#00b0ff; margin-top:20px;">
+						Used with conditional jumps
+					</p>
+				</section>
+
+				<!-- CMP Logical Exercise -->
+				<section>
+					<h3>CMP Logic Quiz</h3>
+
+					<p>AX = 30, BX = 20</p>
+					<p>cmp AX, BX<br>jg NEXT</p>
+
+					<select id="cmp-q" style="padding:8px;">
+						<option value="">Will it jump?</option>
+						<option value="yes">YES</option>
+						<option value="no">NO</option>
+					</select>
+
+					<button onclick="checkCMP()">Check</button>
+
+					<p id="cmp-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkCMP() {
+							let v = document.getElementById("cmp-q").value;
+							if (v === "yes") {
+								document.getElementById("cmp-res").textContent = "Correct! 30 > 20";
+								document.getElementById("cmp-res").style.color = "green";
+							} else {
+								document.getElementById("cmp-res").textContent = "Wrong! AX > BX → jg executes";
+								document.getElementById("cmp-res").style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== Summary Slide ==================== -->
+				<section>
+					<h2>Summary</h2>
+					<table style="font-size:0.9em; margin:auto;">
+						<tr>
+							<th>Instruction</th>
+							<th>Operation</th>
+						</tr>
+						<tr>
+							<td>INC</td>
+							<td>Add 1</td>
+						</tr>
+						<tr>
+							<td>DEC</td>
+							<td>Subtract 1</td>
+						</tr>
+						<tr>
+							<td>ADD</td>
+							<td>dest = dest + src</td>
+						</tr>
+						<tr>
+							<td>SUB</td>
+							<td>dest = dest - src</td>
+						</tr>
+						<tr>
+							<td>CMP</td>
+							<td>dest - src (no store)</td>
+						</tr>
+					</table>
+
+					<p style="margin-top:25px; color:#4caf50; font-weight:bold;">
+						Exercises improve understanding — practice matters!
+					</p>
+				</section>
+
+
+				<!-- ==================== Title Slide ==================== -->
+				<section>
+					<h1>Conditional Execution</h1>
+					<p style="margin-top:20px; font-size:1.2em;">
+						JMP • JE • JNE • JG • JL • JGE • JLE
+					</p>
+					<p class="fragment" style="color:#00e676; font-weight:bold; margin-top:30px;">
+						Control the flow of your program
+					</p>
+				</section>
+
+				<!-- ==================== Unconditional Jump ==================== -->
+				<section>
+					<h2>Unconditional Jump: JMP</h2>
+					<p>Always jumps to the given label</p>
+
+					<pre><code class="hljs" style="font-size:0.85em;">
+mov EAX, 1
+inc_again:
+inc EAX
+jmp inc_again  ; infinite loop
+mov EBX, EAX   ; never executed
+		</code></pre>
+
+					<p class="fragment" style="color:#ff9800; margin-top:20px;">
+						JMP → always changes EIP (next instruction)
+					</p>
+				</section>
+
+				<!-- ==================== Conditional Jump Intro ==================== -->
+				<section>
+					<h3>Conditional Jump: j&lt;cond&gt;</h3>
+					<p>Jump only if a condition is true</p>
+					<p class="fragment" style="margin-top:0px;">
+						Usually tests flags set by <b>cmp</b> or arithmetic instructions
+					</p>
+
+					<div style="margin-top:0px;">
+						<pre><code class="hljs" style="font-size:0.85em;">    xor  cx, cx                 ; CX = 0 (counter)
+
+get_char:
+    mov  ah, 01h                ; input with echo
+    int  21h
+
+    cmp  al, 0Dh                ; Enter pressed?
+    je   finished
+
+    inc  cx                    ; count the character
+    jmp  get_char
+
+finished:
+    ; CX now holds how many characters were typed (excluding Enter)</code></pre>
+					</div>
+				</section>
+
+				<!-- ==================== How CMP + Conditional Jump Works ==================== -->
+				<section>
+					<h3>CMP + JE Example</h3>
+					<p>AL = 0DH → ZF = 1</p>
+					<p>AL ≠ 0DH → ZF = 0</p>
+
+					<div style="margin-top:20px;">
+						<pre><code class="hljs" style="font-size:0.85em;">
+cmp AL, 0DH    ; AL - 0DH → sets Zero Flag (ZF)
+je CR_received ; jump if ZF = 1
+			</code></pre>
+					</div>
+
+					<p class="fragment" style="color:#4caf50; margin-top:20px;">
+						Flags retain their value until overwritten
+					</p>
+				</section>
+
+				<section>
+					<h1>CPU FLAGS Overview</h1>
+					<p style="margin-top:20px; font-size:1.2em;">Learn how to calculate ZF, SF, CF, OF, AF, PF</p>
+					<p class="fragment" style="color:#00e676; font-weight:bold; margin-top:30px;">
+						Flags indicate results of arithmetic & logic operations
+					</p>
+				</section>
+
+				<!-- ==================== Flags Table ==================== -->
+				<section>
+					<h2>Flags Table</h2>
+					<table style="font-size:0.9em; margin:auto; margin-top:20px; border-collapse:collapse;">
+						<tr>
+							<th style="border:1px solid #ccc; padding:6px;">Flag</th>
+							<th style="border:1px solid #ccc; padding:6px;">Meaning</th>
+							<th style="border:1px solid #ccc; padding:6px;">Set When...</th>
+						</tr>
+						<tr>
+							<td>ZF</td>
+							<td>Zero Flag</td>
+							<td>Result = 0</td>
+						</tr>
+						<tr>
+							<td>SF</td>
+							<td>Sign Flag</td>
+							<td>Most significant bit = 1 (negative)</td>
+						</tr>
+						<tr>
+							<td>CF</td>
+							<td>Carry Flag</td>
+							<td>Unsigned overflow (borrow/carry)</td>
+						</tr>
+						<tr>
+							<td>OF</td>
+							<td>Overflow Flag</td>
+							<td>Signed overflow (result too big)</td>
+						</tr>
+						<tr>
+							<td>AF</td>
+							<td>Auxiliary Carry</td>
+							<td>Carry from bit 3 to bit 4</td>
+						</tr>
+						<tr>
+							<td>PF</td>
+							<td>Parity Flag</td>
+							<td>Even number of 1 bits → PF=1</td>
+						</tr>
+					</table>
+				</section>
+
+				<!-- ==================== Flags Example 1 ==================== -->
+				<section>
+					<h3>Example: ADD 8-bit Numbers</h3>
+					<p>Instruction: <code>ADD AL, BL</code></p>
+
+					<pre><code class="hljs" style="font-size:0.80em;">AL = 0x7F   ; 0111 1111
+BL = 0x01   ; 0000 0001
+ADD AL, BL  ; AL = 0x80 → 1000 0000</code></pre>
+					<p class="fragment" style="margin-top:0px;">
+						Which flags are set?
+					</p>
+					<ul class="fragment" style="margin-top:0px;">
+						<li>ZF = 0 (result ≠ 0)</li>
+						<li>SF = 1 (MSB = 1 → negative)</li>
+						<li>CF = 0 (no unsigned carry out)</li>
+						<li>OF = 1 (signed overflow: 127+1 → -128)</li>
+						<li>AF = 1 (carry from bit 3 to 4)</li>
+						<li>PF = 0 (odd number of 1 bits)</li>
+					</ul>
+				</section>
+
+				<!-- ==================== Flags Example 2 ==================== -->
+				<section>
+					<h3>Example: SUB 8-bit Numbers</h3>
+					<p>Instruction: <code>SUB AL, BL</code></p>
+
+					<pre><code class="hljs" style="font-size:0.85em;">AL = 0x05   ; 0000 0101
+BL = 0x09   ; 0000 1001
+SUB AL, BL  ; AL = 0xFC → 1111 1100</code></pre>
+
+					<p class="fragment" style="margin-top:10px;">
+						Flags set:
+					</p>
+					<ul class="fragment" style="margin-top:10px;">
+						<li>ZF = 0 (result ≠ 0)</li>
+						<li>SF = 1 (negative)</li>
+						<li>CF = 1 (borrow for unsigned)</li>
+						<li>OF = 0 (signed result correct)</li>
+						<li>AF = 1 (borrow from bit 4)</li>
+						<li>PF = 0 (odd number of 1 bits)</li>
+					</ul>
+				</section>
+
+				<section style="overflow:auto; padding-bottom:20px;">
+					<h3>Interactive Flags Exercise</h3>
+					<p>AL = 0x0F, BL = 0x01 → ADD AL, BL</p>
+
+					<p>Which flags are set? (Yes/No)</p>
+					<table style="font-size:0.50em; margin:auto; margin-top:0px; border-collapse: collapse;">
+						<tr>
+							<th>Flag</th>
+							<th>Set?</th>
+						</tr>
+						<tr>
+							<td>ZF</td>
+							<td>
+								<select id="f1">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>SF</td>
+							<td>
+								<select id="f2">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>CF</td>
+							<td>
+								<select id="f3">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>OF</td>
+							<td>
+								<select id="f4">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>AF</td>
+							<td>
+								<select id="f5">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>PF</td>
+							<td>
+								<select id="f6">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+
+					<button id="check-flags" style="margin-top:15px; padding:6px 12px;">Check</button>
+					<p id="flags-res" style="font-weight:bold; margin-top:10px;"></p>
+				</section>
+				<script>
+					document.addEventListener('DOMContentLoaded', () => {
+						const button = document.getElementById("check-flags");
+						button.addEventListener("click", () => {
+							// Correct answers for AL=0x0F + BL=0x01 → 0x10
+							const correctAnswers = ["No", "No", "No", "No", "Yes", "Yes"];
+							const userAnswers = [
+								document.getElementById("f1").value,
+								document.getElementById("f2").value,
+								document.getElementById("f3").value,
+								document.getElementById("f4").value,
+								document.getElementById("f5").value,
+								document.getElementById("f6").value
+							];
+
+							let allCorrect = true;
+							for (let i = 0; i < correctAnswers.length; i++) {
+								if (userAnswers[i] !== correctAnswers[i]) {
+									allCorrect = false;
+									break;
+								}
+							}
+
+							const res = document.getElementById("flags-res");
+							if (allCorrect) {
+								res.textContent = "All Correct! Well done!";
+								res.style.color = "green";
+							} else {
+								res.textContent = "Some answers are wrong. Check ZF, SF, CF, OF, AF, PF.";
+								res.style.color = "red";
+							}
+						});
+					});
+				</script>
+
+
+
+				<section>
+					<h3>Common Conditional Jumps</h3>
+					<table style="font-size:0.80em; margin:auto; margin-top:20px; border-collapse: collapse;">
+						<tr>
+							<th>Instruction</th>
+							<th>Condition</th>
+							<th>When it jumps</th>
+						</tr>
+						<tr>
+							<td>je / jz</td>
+							<td>Zero flag = 1</td>
+							<td>Jump if equal / result is zero</td>
+						</tr>
+						<tr>
+							<td>jne / jnz</td>
+							<td>Zero flag = 0</td>
+							<td>Jump if not equal / result is non-zero</td>
+						</tr>
+						<tr>
+							<td>jg</td>
+							<td>ZF=0, SF=OF</td>
+							<td>Jump if signed greater</td>
+						</tr>
+						<tr>
+							<td>jl</td>
+							<td>SF ≠ OF</td>
+							<td>Jump if signed less</td>
+						</tr>
+						<tr>
+							<td>jge</td>
+							<td>SF=OF</td>
+							<td>Jump if signed greater or equal</td>
+						</tr>
+						<tr>
+							<td>jle</td>
+							<td>ZF=1 OR SF≠OF</td>
+							<td>Jump if signed less or equal</td>
+						</tr>
+						<tr>
+							<td>jc</td>
+							<td>Carry flag = 1</td>
+							<td>Jump if carry occurred</td>
+						</tr>
+						<tr>
+							<td>jnc</td>
+							<td>Carry flag = 0</td>
+							<td>Jump if no carry</td>
+						</tr>
+					</table>
+				</section>
+
+
+				<!-- ==================== Flags Visual Example ==================== -->
+				<section>
+					<h3>Flags Example</h3>
+					<p>AX = 5, BX = 10</p>
+					<p>Instruction: <code>cmp AX, BX</code></p>
+
+					<p class="fragment" style="margin-top:20px; font-style:italic; color:#81d4fa;">
+						ZF = 0 (not equal), SF = 1 (negative result)
+					</p>
+
+					<p class="fragment" style="margin-top:20px;">
+						je equal? ❌ → no jump<br>
+						jl smaller? ✅ → jump to 'smaller'
+					</p>
+				</section>
+
+				<!-- ==================== Conditional Jump Interactive Exercise ==================== -->
+				<section>
+					<h3>Interactive Exercise</h3>
+					<p>AX = 20, BX = 15<br>Instruction: <code>cmp AX, BX</code></p>
+
+					<p>Which jumps will be taken?</p>
+					<select id="cond-jump" style="padding:6px; margin-top:10px;">
+						<option value="">Select</option>
+						<option value="je">je</option>
+						<option value="jg">jg</option>
+						<option value="jl">jl</option>
+						<option value="jne">jne</option>
+					</select>
+
+					<button onclick="checkCondJump()" style="margin-left:10px; padding:6px 12px;">Check</button>
+					<p id="cond-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkCondJump() {
+							const val = document.getElementById("cond-jump").value;
+							const res = document.getElementById("cond-res");
+							if (val === "jg" || val === "jne") {
+								res.textContent = "Correct! ZF=0, SF=0 → JG & JNE jump";
+								res.style.color = "green";
+							} else {
+								res.textContent = "Incorrect, try again!";
+								res.style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== Conditional Jump Table Exercise ==================== -->
+				<section>
+					<h3>Fill in the Action Table</h3>
+					<p>Assume statement: <code>cmp AL, BL</code></p>
+
+					<table style="font-size:0.85em; margin:auto; margin-top:20px; border-collapse: collapse;">
+						<tr>
+							<th style="border:1px solid #ccc; padding:4px;">Instruction</th>
+							<th style="border:1px solid #ccc; padding:4px;">AL</th>
+							<th style="border:1px solid #ccc; padding:4px;">BL</th>
+							<th style="border:1px solid #ccc; padding:4px;">Jump?</th>
+						</tr>
+						<tr>
+							<td>je go_back</td>
+							<td>56H</td>
+							<td>56H</td>
+							<td>
+								<select id="t1" style="width:60px;">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>jg go_back</td>
+							<td>56H</td>
+							<td>55H</td>
+							<td>
+								<select id="t2" style="width:60px;">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>jl go_back</td>
+							<td>27H</td>
+							<td>26H</td>
+							<td>
+								<select id="t3" style="width:60px;">
+									<option value="">Select</option>
+									<option>Yes</option>
+									<option>No</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+
+					<button style="margin-top:15px; padding:6px 12px;" onclick="checkTableJump()">Check Answers</button>
+					<p id="table-res" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkTableJump() {
+							const a1 = document.getElementById("t1").value.trim().toLowerCase();
+							const a2 = document.getElementById("t2").value.trim().toLowerCase();
+							const a3 = document.getElementById("t3").value.trim().toLowerCase();
+							const res = document.getElementById("table-res");
+
+							if (a1 === "yes" && a2 === "yes" && a3 === "no") {
+								res.textContent = "All Correct!";
+								res.style.color = "green";
+							} else {
+								res.textContent = "Some answers are wrong! Hint: check ZF and SF flags.";
+								res.style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+
+				<!-- ==================== Summary Slide ==================== -->
+				<section>
+					<h2>Summary</h2>
+					<ul style="font-size:0.9em; margin-top:20px;">
+						<li><b>JMP</b> → unconditional jump</li>
+						<li><b>JE / JZ</b> → jump if equal / zero</li>
+						<li><b>JNE / JNZ</b> → jump if not equal / not zero</li>
+						<li><b>JG / JL / JGE / JLE</b> → signed comparison jumps</li>
+						<li><b>JC / JNC</b> → carry flag</li>
+						<li>Conditional jumps depend on FLAGS (ZF, SF, CF, OF)</li>
+					</ul>
+				</section>
+
+
+				<!-- ==================== Iteration Instruction Section ==================== -->
+				<section>
+					<h2>Iteration with Loops</h2>
+					<p>We can repeat a block of instructions multiple times using <strong>jump + counter</strong> or the
+						<strong>LOOP</strong> instruction.</p>
+				</section>
+
+				<!-- ==================== Loop Using DEC + JNZ ==================== -->
+				<section>
+					<h3>Loop using DEC + JNZ</h3>
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">
+mov CL, 50       ; loop counter
+repeat1:
+    ; &lt;loop body&gt;
+    dec CL
+    jnz repeat1    ; jump if CL ≠ 0
+    </pre>
+					<p>This executes the &lt;loop body&gt; 50 times. CL is decremented each iteration.</p>
+				</section>
+
+				<!-- ==================== Loop Instruction ==================== -->
+				<section>
+					<h3>LOOP Instruction</h3>
+					<p>LOOP simplifies iteration by combining <code>DEC ECX</code> + <code>JNZ</code></p>
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">mov ECX, 50       ; loop counter
+repeat1:
+    ; &lt;loop body&gt;
+    loop repeat1    ; decrement ECX, jump if ECX ≠ 0</pre>
+					<p>ECX is used as the loop counter. LOOP automatically decrements and checks ECX.</p>
+				</section>
+
+				<!-- ==================== LOOP Example 1 ==================== -->
+				<section>
+					<h3>Example: Summing Numbers</h3>
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">mov ECX, 5      ; loop 5 times
+mov EAX, 0      ; sum accumulator
+repeat_sum:
+    add EAX, 2  ; add 2 each iteration
+    loop repeat_sum
+; After loop, EAX = 10</pre>
+				</section>
+
+				<!-- ==================== LOOP Example 2 ==================== -->
+				<section>
+					<h3>Example: Copy Array</h3>
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">
+mov ECX, 4          ; 4 elements
+mov ESI, src_array  ; source array
+mov EDI, dest_array ; destination array
+copy_loop:
+    mov AL, [ESI]    ; read byte from source
+    mov [EDI], AL    ; write byte to destination
+    inc ESI
+    inc EDI
+    loop copy_loop
+    </pre>
+				</section>
+
+				<!-- ==================== Interactive Exercise ==================== -->
+				<section>
+					<h3>Exercise: Fill the Loop Counter</h3>
+					<p>We want to repeat the loop <strong>10 times</strong>. Fill the ECX value:</p>
+
+					<pre style="background:#111; color:#d4d4d4; padding:20px; border-radius:10px; font-size:0.9em;">
+mov ECX, <input type="text" id="loop-ecx" placeholder="?" 
+               style="width:50px; padding:4px; text-align:center; font-family:monospace;">
+repeat1:
+    ; &lt;loop body&gt;
+    loop repeat1
+    </pre>
+
+					<button style="margin-top:10px; padding:6px 12px;" onclick="checkLoop()">Check</button>
+					<p id="loop-result" style="font-weight:bold; margin-top:10px;"></p>
+
+					<script>
+						function checkLoop() {
+							const val = document.getElementById("loop-ecx").value.trim();
+							const res = document.getElementById("loop-result");
+							if (val === "10") {
+								res.textContent = "Correct! The loop will run 10 times.";
+								res.style.color = "green";
+							} else {
+								res.textContent = "Try again! Remember ECX holds the loop count.";
+								res.style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- ==================== Practice Problems ==================== -->
+				<section>
+					<h3>Practice Problems</h3>
+					<ol>
+						<li>Write a loop using <strong>LOOP</strong> that adds numbers 1 to 10 and stores the sum in
+							EAX.</li>
+						<li>Copy 8 bytes from memory location <code>src</code> to <code>dest</code> using a loop.</li>
+						<li>Use a loop to decrement a value in EBX from 20 down to 0.</li>
+						<li>Write a loop that multiplies AL by 2 for 5 iterations.</li>
+					</ol>
+				</section>
+
+
+			</section>
+
+
+
+
+
 
 
 
