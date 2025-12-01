@@ -2647,7 +2647,7 @@ mov [name1+4], 'K'   ; register → memory offset
 					<pre><code class="hljs" style="font-size: 0.8em;">
 mov [EBX], 100     ; Is 100 a BYTE or WORD or DWORD?
     </code></pre>
-					<p class="fragment" style="color: #FF5722C;">Error or wrong size!</p>
+					<p class="fragment" style="color: #FF572C;">Error or wrong size!</p>
 				</section>
 
 				<section>
@@ -3693,7 +3693,8 @@ SUB AL, BL  ; AL = 0xFC → 1111 1100</code></pre>
 				<section>
 					<h2>Iteration with Loops</h2>
 					<p>We can repeat a block of instructions multiple times using <strong>jump + counter</strong> or the
-						<strong>LOOP</strong> instruction.</p>
+						<strong>LOOP</strong> instruction.
+					</p>
 				</section>
 
 				<!-- ==================== Loop Using DEC + JNZ ==================== -->
@@ -3790,6 +3791,352 @@ repeat1:
 					</ol>
 				</section>
 
+
+			</section>
+
+			<section>
+				<section>
+					<h2>What is a Stack?</h2>
+					<ul>
+						<li class="fragment">LIFO — Last In, First Out</li>
+						<li class="fragment">Two ops: <b>PUSH</b> (insert) and <b>POP</b> (remove)</li>
+						<li class="fragment">Only Top-of-Stack (TOS) is directly accessible</li>
+					</ul>
+				</section>
+				<section>
+					<h2>Pentium Stack Basics</h2>
+					<ul>
+						<li class="fragment">Stack segment: <b>SS</b> and top-of-stack offset: <b>ESP</b></li>
+						<li class="fragment">Stack grows <b>downward</b> (toward lower addresses)</li>
+						<li class="fragment">Only words (16-bit) or dwords (32-bit) are pushed/popped</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Visual: Growth & TOS</h3>
+					<div class="monoslab small-mono">
+						hex addresses ↑<br>
+						...<br>
+						1003 ← TOS (top)<br>
+						1002<br>
+						1001<br>
+						1000<br>
+					</div>
+					<p class="fragment" style="margin-top:14px;">Push 1000 → 1001 → 1002 → 1003. Pop returns 1003 first.
+					</p>
+				</section>
+
+				<section>
+					<h2>PUSH (rules)</h2>
+					<p class="fragment">PUSH word: <b>ESP = ESP - 2</b> then store 16-bit at SS:ESP</p>
+					<p class="fragment">PUSH dword: <b>ESP = ESP - 4</b> then store 32-bit at SS:ESP</p>
+					<pre class="code fragment"><code>push 21ABh    ; 16-bit push
+push 7FBD329Ah  ; 32-bit push</code></pre>
+				</section>
+
+				<section>
+					<h2>POP (rules)</h2>
+					<p class="fragment">POP word: dest = SS:ESP ; <b>ESP = ESP + 2</b></p>
+					<p class="fragment">POP dword: dest = SS:ESP ; <b>ESP = ESP + 4</b></p>
+					<pre class="code fragment"><code>pop AX
+pop EAX</code></pre>
+				</section>
+
+				<section>
+					<h3>Example: Push & Pop</h3>
+					<pre class="code small-mono">
+; initial ESP = 0100h
+push 1234h      ; ESP -> 00FEh ; [00FE] = 34, [00FF] = 12
+push 99AB8877h  ; ESP -> 00FAh ; store 32-bit
+pop EBX         ; EBX = 99AB8877h ; ESP -> 00FEh
+pop AX          ; AX = 1234h ; ESP -> 0100h
+      </pre>
+				</section>
+
+				<section>
+					<h3>Exercise 1 — What's the value at TOS?</h3>
+					<p>After these pushes, what is stored at TOS?</p>
+					<pre class="code small-mono">push 1234h
+push 99AB8877h</pre>
+
+					<select id="ex1" style="margin-top:10px;">
+						<option value="">Select</option>
+						<option value="1234">1234h</option>
+						<option value="99ab8877">99AB8877h</option>
+						<option value="8877">8877h</option>
+					</select>
+					<button class="small-btn" id="check-ex1-stack">Check</button>
+					<p id="res-ex1" class="result"></p>
+				</section>
+
+				<!-- Exercise 2 -->
+				<section>
+					<h3>Exercise 2 — ESP movement</h3>
+					<p>Initial: ESP = 2000h</p>
+					<p>Instruction: <code>push 55AAh</code></p>
+					<p>After execution ESP = ?</p>
+
+					<select id="ex2">
+						<option value="">Select</option>
+						<option value="2002">2002h</option>
+						<option value="1ffe">1FFEh</option>
+						<option value="1ffc">1FFCh</option>
+					</select>
+					<button class="small-btn" id="check-ex2-stack">Check</button>
+					<p id="res-ex2" class="result"></p>
+				</section>
+
+				<section>
+					<h2>Physical Address Calculation</h2>
+					<ul>
+						<li><strong>Real Mode:</strong> Physical = SS × 16 + ESP</li>
+						<li><strong>Protected / Flat Mode:</strong> Physical = SS_base + ESP</li>
+						<li>In flat memory, SS_base = 0 → Physical = ESP</li>
+					</ul>
+					<p>Example: SS=9000H, ESP=0100H → Physical = 90000H + 0100H = 90100H</p>
+				</section>
+
+				<!-- Slide 7 -->
+				<section>
+					<h2>Exercises: Identify TOS Address</h2>
+					<p>SS = 8000H, ESP = 0200H → TOS = ? (physical address)</p>
+					<input type="text" id="ex1" style="width:100px;">
+					<button onclick="checkEx11Stack()">Check</button>
+					<p id="ex1res"></p>
+					<script>
+						function checkEx11Stack() {
+							let val = document.getElementById('ex1').value.trim().toUpperCase();
+							let correct = "80200H";
+							if (val === correct) {
+								document.getElementById('ex1res').textContent = "Correct! TOS = 80200H";
+								document.getElementById('ex1res').style.color = "green";
+							} else {
+								document.getElementById('ex1res').textContent = "Incorrect. Hint: Physical = SS*16 + ESP";
+								document.getElementById('ex1res').style.color = "red";
+							}
+						}
+					</script>
+				</section>
+
+				<!-- Slide 8 -->
+				<section>
+					<h2>Exercise 2: Stack Operations</h2>
+					<p>Initial: ESP = 0100H, SS = 9000H</p>
+					<p>Perform these operations:</p>
+					<ol>
+						<li>push 1234H</li>
+						<li>push 56789ABCH</li>
+						<li>pop EAX</li>
+					</ol>
+					<p>Fill in the table:</p>
+					<table>
+						<tr>
+							<th>Operation</th>
+							<th>ESP</th>
+							<th>TOS Address (SS:ESP)</th>
+						</tr>
+						<tr>
+							<td>Initial</td>
+							<td>0100H</td>
+							<td>?</td>
+						</tr>
+						<tr>
+							<td>push 1234H</td>
+							<td>?</td>
+							<td>?</td>
+						</tr>
+						<tr>
+							<td>push 56789ABCH</td>
+							<td>?</td>
+							<td>?</td>
+						</tr>
+						<tr>
+							<td>pop EAX</td>
+							<td>?</td>
+							<td>?</td>
+						</tr>
+					</table>
+				</section>
+
+				<section>
+					<h2>Special stack ops</h2>
+					<ul>
+						<li class="fragment"><b>pushfd / popfd</b> — push/pop full EFLAGS (32-bit)</li>
+						<li class="fragment"><b>pushfw / popfw</b> — 16-bit FLAGS</li>
+						<li class="fragment"><b>pushad / popad</b> — save/restore all 32-bit GPRs (EAX..EDI)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Protect registers (example)</h3>
+					<pre class="code small-mono">
+pushad        ; save EAX,ECX,EDX,EBX,ESP,EBP,ESI,EDI
+; ... do work that clobbers regs ...
+popad         ; restore (ESP unchanged by popad)
+      </pre>
+					<p class="fragment" style="color:#4caf50;">Useful at procedure start/end to preserve caller state
+					</p>
+				</section>
+
+
+				<section>
+					<h3>Exercise 3 — Swap registers using stack</h3>
+					<p>AX=1234h, BX=5678h. Which sequence swaps them?</p>
+					<select id="ex3">
+						<option value="">Select</option>
+						<option value="a">push AX / pop BX / push BX / pop AX</option>
+						<option value="b">push AX / push BX / pop BX / pop AX</option>
+						<option value="c">push AX / push BX / pop AX / pop BX</option>
+					</select>
+					<p style="margin-top:8px;">(Hint: think order of push/pop.)</p>
+					<button class="small-btn" id="check-ex3-stack">Check</button>
+					<p id="res-ex3" class="result"></p>
+				</section>
+
+				<!-- Stack use cases -->
+				<section>
+					<h2>Common Uses of Stack</h2>
+					<ul>
+						<li class="fragment">Procedure call return addresses</li>
+						<li class="fragment">Passing parameters to procedures</li>
+						<li class="fragment">Storing local variables</li>
+						<li class="fragment">Saving registers across calls</li>
+					</ul>
+				</section>
+
+				<!-- Procedure intro -->
+				<section>
+					<h2>Procedures — quick intro</h2>
+					<p class="fragment">call <b>label</b> — pushes return address, jumps to label</p>
+					<p class="fragment">ret — pops return address into EIP</p>
+					<pre class="code fragment"><code>call myfunc
+; ... 
+myfunc:
+  ; do work
+  ret
+</code></pre>
+				</section>
+
+				<!-- Example: call/ret -->
+				<section>
+					<h3>call/ret example</h3>
+					<pre class="code small-mono">
+main:
+  call inc_and_return
+  ; EIP resumes here
+
+inc_and_return:
+  inc EAX
+  ret
+      </pre>
+				</section>
+
+				<!-- Exercise 4: call stack behavior -->
+				<section>
+					<h3>Where does RET return?</h3>
+					<p>Consider:</p>
+					<pre class="code small-mono">
+  call L1
+  mov EBX, 1
+L1:
+  ; do stuff
+  ret
+      </pre>
+					<p>After <code>ret</code> executes, next instruction executed is:</p>
+					<select id="ex4">
+						<option value="">Select</option>
+						<option value="mov">mov EBX, 1</option>
+						<option value="after">Instruction after mov EBX,1</option>
+						<option value="re-exec">Re-execute call L1</option>
+					</select>
+					<button class="small-btn" id="check-ex4-stack">Check</button>
+					<p id="res-ex4" class="result"></p>
+				</section>
+
+				<!-- Advanced: parameter passing -->
+				<section>
+					<h2>Parameter Passing (brief)</h2>
+					<ul>
+						<li class="fragment"><b>Stack-based:</b> push args right-to-left; callee pops/reads</li>
+						<li class="fragment"><b>Register-based:</b> some ABIs use registers for first args</li>
+						<li class="fragment">Variable number of args easy with stack (push count or sentinel)</li>
+					</ul>
+				</section>
+
+				<!-- Practice problems -->
+				<section>
+					<h2>Practice Problems</h2>
+					<ol>
+						<li class="fragment">Write code to push EAX, EBX, ECX then pop into ESI, EDI, EBP (order
+							matters).</li>
+						<li class="fragment">Write a small procedure that increments a memory cell N times using LOOP.
+						</li>
+						<li class="fragment">Show how to pass two 32-bit args on the stack and return a 32-bit result in
+							EAX.</li>
+					</ol>
+				</section>
+
+				<!-- Summary -->
+				<section>
+					<h2>Summary (Quick)</h2>
+					<ul>
+						<li class="fragment">Stack = LIFO; SS:ESP points to TOS</li>
+						<li class="fragment">PUSH/POP adjust ESP by 2 or 4</li>
+						<li class="fragment">pushad/popad and pushfd/popfd are convenience ops</li>
+						<li class="fragment">Used heavily in procedure calls & parameter passing</li>
+					</ul>
+				</section>
+
+				<script>
+					// Interactive checks (safe: wait until DOM ready)
+					document.addEventListener('DOMContentLoaded', () => {
+						// Exercise 1
+						document.getElementById('check-ex1-stack').addEventListener('click', () => {
+							const v = document.getElementById('ex1').value;
+							const r = document.getElementById('res-ex1');
+							if (v === '99ab8877') { r.textContent = 'Correct — TOS = 99AB8877h'; r.style.color = 'green'; }
+							else { r.textContent = 'Wrong — TOS is the last pushed item (99AB8877h)'; r.style.color = 'red'; }
+						});
+
+						// Exercise 2
+						document.getElementById('check-ex2-stack').addEventListener('click', () => {
+							const v = document.getElementById('ex2').value;
+							const r = document.getElementById('res-ex2');
+							if (v === '1ffe') { r.textContent = 'Correct — ESP decreases by 2'; r.style.color = 'green'; }
+							else { r.textContent = 'Incorrect — PUSH word subtracts 2 from ESP'; r.style.color = 'red'; }
+						});
+
+						// Exercise 3 (swap using stack) — correct pattern: push AX ; push BX ; pop AX ; pop BX is WRONG.
+						// The correct swap using stack: push AX ; push BX ; pop AX? -> explain: easiest: push AX; push BX; pop AX? Not trivial in selects.
+						// We'll accept answer 'a' only if user picks the right one (construct simple correct option: push AX ; push BX ; pop AX ; pop BX will leave original order)
+						// Provide correct explanation: correct sequence to swap using stack: push AX; push BX; pop AX_temp? Simpler: push AX; push BX; pop AX ; pop BX DOES NOT SWAP.
+						// We'll give the simplest correct sequence: push AX ; push BX ; pop AX ; pop BX -> this actually restores original order — so let's mark option 'a' as correct if it's the intended mistaken option? To avoid confusion, make "c" the correct simple swap:
+						// Correct swap using stack (simple): push AX ; push BX ; pop AX ; pop BX (No — that's incorrect). Proper swap using push/pop:
+						// push AX
+						// push BX
+						// pop AX   ; AX = old BX
+						// pop BX   ; BX = old AX
+						// This actually swaps. So option c is the same as b; ensure one option matches that. We'll accept option 'c'.
+						document.getElementById('check-ex3-stack').addEventListener('click', () => {
+							const v = document.getElementById('ex3').value;
+							const r = document.getElementById('res-ex3');
+							if (v === 'c') {
+								r.textContent = 'Correct — push AX; push BX; pop AX; pop BX swaps AX and BX'; r.style.color = 'green';
+							} else {
+								r.textContent = 'Not quite — think: last pushed becomes first popped. Push AX then BX → pop gives BX then AX (swapped)'; r.style.color = 'red';
+							}
+						});
+
+						// Exercise 4
+						document.getElementById('check-ex4-stack').addEventListener('click', () => {
+							const v = document.getElementById('ex4').value;
+							const r = document.getElementById('res-ex4');
+							if (v === 'mov') { r.textContent = 'Correct — RET returns to instruction after the CALL, which is mov EBX, 1'; r.style.color = 'green'; }
+							else { r.textContent = 'Incorrect — RET pops return address produced by CALL (next instruction after call)'; r.style.color = 'red'; }
+						});
+
+					});
+				</script>
 
 			</section>
 
