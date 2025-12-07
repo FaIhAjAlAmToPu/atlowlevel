@@ -4515,6 +4515,473 @@ repeat1:
 			</ol>
 		</section>
 
+		<section>
+			<h2>Pentium Logical Instructions</h2>
+			<p>AND, OR, XOR, NOT, TEST</p>
+		</section>
+
+		<!-- Slide 2: Logical Instructions Syntax -->
+		<section>
+			<h3>Syntax</h3>
+			<ul>
+				<li><code>and destination, source</code></li>
+				<li><code>or destination, source</code></li>
+				<li><code>xor destination, source</code></li>
+				<li><code>not destination</code></li>
+			</ul>
+			<p>Binary operators: AND, OR, XOR<br>Unary operator: NOT</p>
+		</section>
+
+		<!-- Slide 3: Truth Table - AND -->
+		<section>
+			<h3>AND Operation</h3>
+			<table border="1">
+				<tr>
+					<th>Source</th>
+					<th>Dest</th>
+					<th>Result</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 4: Truth Table - OR -->
+		<section>
+			<h3>OR Operation</h3>
+			<table border="1">
+				<tr>
+					<th>Source</th>
+					<th>Dest</th>
+					<th>Result</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 5: Truth Table - XOR -->
+		<section>
+			<h3>XOR Operation</h3>
+			<table border="1">
+				<tr>
+					<th>Source</th>
+					<th>Dest</th>
+					<th>Result</th>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 6: NOT Operation -->
+		<section>
+			<h3>NOT Operation</h3>
+			<p>Unary: flips each bit (bitwise complement)</p>
+			<p>Example: <code>AL = 10101110b → not AL → 01010001b</code></p>
+		</section>
+
+		<!-- Slide 7: Logical Instructions Examples -->
+		<section>
+			<h3>Examples</h3>
+			<table border="1">
+				<tr>
+					<th>Instruction</th>
+					<th>AL</th>
+					<th>BL</th>
+					<th>Result</th>
+				</tr>
+				<tr>
+					<td>AND AL, BL</td>
+					<td>1010</td>
+					<td>1110</td>
+					<td>1010 & 1110 = 1010</td>
+				</tr>
+				<tr>
+					<td>OR AL, BL</td>
+					<td>1010</td>
+					<td>1110</td>
+					<td>1010 | 1110 = 1110</td>
+				</tr>
+				<tr>
+					<td>XOR AL, BL</td>
+					<td>1010</td>
+					<td>1110</td>
+					<td>1010 ^ 1110 = 0100</td>
+				</tr>
+				<tr>
+					<td>NOT AL</td>
+					<td>1010</td>
+					<td>-</td>
+					<td>0101</td>
+				</tr>
+			</table>
+		</section>
+
+		<section>
+			<h3>Testing a Bit</h3>
+			<pre><code>
+; Check LSB of AL
+and AL, 01H
+jz bit_is_zero
+; Code if bit = 1
+jmp skip1
+bit_is_zero:
+; Code if bit = 0
+skip1:
+; Continue
+        </code></pre>
+			<p>AND sets ZF flag → conditional jump works</p>
+		</section>
+
+		<section>
+			<h3>Problem</h3>
+			<p>AND modifies destination:</p>
+			<pre><code>
+AL = 10101110b
+and AL, 01H ; AL becomes 0 or 1
+        </code></pre>
+			<p>Original value lost!</p>
+		</section>
+
+		<!-- Slide 10: TEST Instruction -->
+		<section>
+			<h3>TEST Instruction</h3>
+			<ul>
+				<li>Syntax: <code>test destination, source</code></li>
+				<li>Performs bitwise AND without modifying operands</li>
+				<li>Sets flags (ZF, SF, PF) like AND</li>
+			</ul>
+			<pre><code>
+test AL, 01H
+jz bit_is_zero
+        </code></pre>
+		</section>
+
+		<section>
+			<h3>Exercise</h3>
+			<p>Write assembly code to check if the 3rd bit of AL is 1 without modifying AL.</p>
+		</section>
+
+		<section>
+			<h2>Pentium Shift Instructions</h2>
+			<p>SHL (Shift Left) & SHR (Shift Right)</p>
+		</section>
+
+		<!-- Slide 2: SHL Instruction -->
+		<section>
+			<h3>SHL - Shift Left</h3>
+			<ul>
+				<li>Syntax: <code>shl destination,count</code> or <code>shl destination,CL</code></li>
+				<li>Leftmost bit → Carry Flag (CF)</li>
+				<li>Rightmost bit filled with 0</li>
+			</ul>
+			<p>Bit movement:</p>
+			<pre>7 6 5 4 3 2 1 0 → CF</pre>
+		</section>
+
+		<!-- Slide 3: SHR Instruction -->
+		<section>
+			<h3>SHR - Shift Right</h3>
+			<ul>
+				<li>Syntax: <code>shr destination,count</code> or <code>shr destination,CL</code></li>
+				<li>Rightmost bit → Carry Flag (CF)</li>
+				<li>Leftmost bit filled with 0</li>
+			</ul>
+			<p>Bit movement:</p>
+			<pre>CF ← 7 6 5 4 3 2 1 0</pre>
+		</section>
+
+		<!-- Slide 4: General Rules -->
+		<section>
+			<h3>Shift Rules</h3>
+			<ul>
+				<li>Destination can be 8-, 16-, or 32-bit register or memory</li>
+				<li>Shift count: 0-31</li>
+				<li>CL register can specify count indirectly</li>
+				<li>Count > 31 → only least significant 5 bits used</li>
+				<li>Count of 0 does nothing</li>
+			</ul>
+		</section>
+
+		<!-- Slide 5: SHL Examples -->
+		<section>
+			<h3>SHL Examples</h3>
+			<table border="1">
+				<tr>
+					<th>Instruction</th>
+					<th>Before</th>
+					<th>After</th>
+					<th>CF</th>
+				</tr>
+				<tr>
+					<td>shl AL,1</td>
+					<td>10101110</td>
+					<td>01011100</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>mov CL,3<br>shl AL,CL</td>
+					<td>01101101</td>
+					<td>01101000</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 6: SHR Examples -->
+		<section>
+			<h3>SHR Examples</h3>
+			<table border="1">
+				<tr>
+					<th>Instruction</th>
+					<th>Before</th>
+					<th>After</th>
+					<th>CF</th>
+				</tr>
+				<tr>
+					<td>shr AL,1</td>
+					<td>10101110</td>
+					<td>01010111</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>mov CL,5<br>shr AX,CL</td>
+					<td>1011110101011001</td>
+					<td>0000010111101010</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 7: Checking LSB using SHR -->
+		<section>
+			<h3>Example: Check Least Significant Bit</h3>
+			<pre><code>
+shr AL,1
+jnc bit_is_zero   ; Jump if CF=0 (LSB was 0)
+; Code if bit = 1
+jmp skip1
+bit_is_zero:
+; Code if bit = 0
+skip1:
+; Continue
+        </code></pre>
+			<p>Use carry flag (CF) instead of modifying AL.</p>
+		</section>
+
+		<!-- Slide 8: Exercise 1 -->
+		<section>
+			<h3>Exercise 1</h3>
+			<p>Given AL = 11010110b:</p>
+			<ul>
+				<li>Perform <code>shl AL,2</code>. Determine new AL and CF.</li>
+				<li>Perform <code>shr AL,3</code>. Determine new AL and CF.</li>
+			</ul>
+		</section>
+
+		<section>
+			<h2>Pentium Rotate Instructions</h2>
+			<p>ROL, ROR, RCL, RCR</p>
+		</section>
+
+		<!-- Slide 2: Rotate Overview -->
+		<section>
+			<h3>Why Rotate?</h3>
+			<ul>
+				<li>Shift instructions lose bits shifted out</li>
+				<li>Rotate instructions preserve all bits</li>
+				<li>Two types: <strong>Without Carry</strong> and <strong>Through Carry</strong></li>
+			</ul>
+		</section>
+
+		<!-- Slide 3: Rotate Without Carry -->
+		<section>
+			<h3>ROL / ROR</h3>
+			<ul>
+				<li>ROL → Rotate Left</li>
+				<li>ROR → Rotate Right</li>
+				<li>Bits shifted out wrap around to the other end</li>
+				<li>Syntax: <code>rol dest,count</code>, <code>ror dest,CL</code></li>
+			</ul>
+			<p>CF catches last bit rotated out</p>
+		</section>
+
+		<!-- Slide 4: Visual ROL / ROR -->
+		<section>
+			<h3>Bit Movement</h3>
+			<pre>
+ROL: 7 6 5 4 3 2 1 0 → wrap to 0
+ROR: CF ← 7 6 5 4 3 2 1 0
+        </pre>
+		</section>
+
+		<!-- Slide 5: Rotate Without Carry Examples -->
+		<section>
+			<h3>Examples</h3>
+			<table border="1">
+				<tr>
+					<th>Instruction</th>
+					<th>Before</th>
+					<th>After</th>
+					<th>CF</th>
+				</tr>
+				<tr>
+					<td>rol AL,1</td>
+					<td>10101110</td>
+					<td>01011101</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>ror AL,1</td>
+					<td>10101110</td>
+					<td>01010111</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>mov CL,3<br>rol AL,CL</td>
+					<td>01101101</td>
+					<td>01101011</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 6: Rotate Through Carry -->
+		<section>
+			<h3>RCL / RCR</h3>
+			<ul>
+				<li>RCL → Rotate Left through Carry</li>
+				<li>RCR → Rotate Right through Carry</li>
+				<li>Bit rotated out → CF, CF → vacated bit</li>
+				<li>Useful for multi-word shifts</li>
+				<li>Syntax: <code>rcl dest,count</code>, <code>rcr dest,CL</code></li>
+			</ul>
+		</section>
+
+		<!-- Slide 7: Visual RCL / RCR -->
+		<section>
+			<h3>Bit Movement with Carry</h3>
+			<pre>
+RCL: CF → 0 1 2 3 4 5 6 7 → CF
+RCR: CF ← 7 6 5 4 3 2 1 0 → CF
+        </pre>
+		</section>
+
+		<!-- Slide 8: Rotate Through Carry Examples -->
+		<section>
+			<h3>Examples</h3>
+			<table border="1">
+				<tr>
+					<th>Instruction</th>
+					<th>Before</th>
+					<th>After</th>
+					<th>CF</th>
+				</tr>
+				<tr>
+					<td>rcl AL,1</td>
+					<td>10101110 0</td>
+					<td>01011100</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>rcr AL,1</td>
+					<td>10101110 1</td>
+					<td>11010111</td>
+					<td>0</td>
+				</tr>
+				<tr>
+					<td>mov CL,3<br>rcl AL,CL</td>
+					<td>01101101 1</td>
+					<td>01101101</td>
+					<td>1</td>
+				</tr>
+				<tr>
+					<td>mov CL,5<br>rcr AX,CL</td>
+					<td>1011110101011001 0</td>
+					<td>1001010111101010</td>
+					<td>1</td>
+				</tr>
+			</table>
+		</section>
+
+		<!-- Slide 9: Multi-Word Example -->
+		<section>
+			<h3>64-bit Multiword Shift</h3>
+			<pre><code>
+; 64-bit number in EDX:EAX
+shr EDX,1    ; Move LSB of EDX to CF
+rcr EAX,1    ; Insert CF into MSB of EAX
+        </code></pre>
+			<p>RCR propagates carry between registers for multiword shift</p>
+		</section>
+
+		<!-- Slide 10: Exercise 1 -->
+		<section>
+			<h3>Exercise</h3>
+			<p>Given AL = 11010110b, CF = 0:</p>
+			<ul>
+				<li>Compute <code>rol AL,2</code> → new AL, CF</li>
+				<li>Compute <code>rcl AL,3</code> → new AL, CF</li>
+			</ul>
+		</section>
+
+
+
 
 	</section>
 
