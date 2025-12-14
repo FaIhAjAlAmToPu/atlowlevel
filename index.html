@@ -5180,90 +5180,7 @@ push 99AB8877h</pre>
 			</script>
 		</section>
 
-		<section data-background-color="#0d1117">
-			<h4 style="color:#ff9800">Exercise: Stack Operations</h4>
 
-			<div style="display:flex; justify-content:center; gap:60px;">
-
-				<!-- Left: Instructions -->
-				<div style="width:45%; font-size:30px; color:#e0e0e0;">
-					<p><strong>Initial:</strong> ESP = <span style="color:#42a5f5;">0100H</span><br>
-						SS = <span style="color:#42a5f5;">9000H</span></p>
-
-					<p style="color:#ffcc80;">Perform in order:</p>
-					<ol style="font-size:30px; line-height:1.8; margin-left:40px;">
-						<li><code>push 1234H</code></li>
-						<li><code>push 56789ABCH</code></li>
-						<li><code>pop EAX</code></li>
-					</ol>
-				</div>
-
-				<!-- Right: Interactive Table -->
-				<div style="width:55%;">
-					<table style="font-size:30px; width:100%; border-collapse:collapse; background:#111; color:white;">
-						<tr style="background:#1565c0; height:70px;">
-							<th style="width:38%;">Operation</th>
-							<th style="width:22%;">ESP</th>
-							<th style="width:40%;">TOS Address</th>
-						</tr>
-						<tr style="height:68px; background:#1e3a8a; color:white;">
-							<td>Initial</td>
-							<td>0100H</td>
-							<td>9000:0100 → <strong>90100H</strong></td>
-						</tr>
-						<tr style="height:68px;">
-							<td>push 1234H</td>
-							<td><input type="text" id="stack_esp1" placeholder="????H"
-									style="width:100px; font-size:40px; text-align:center;"></td>
-							<td><input type="text" id="stack_tos1" placeholder="901??H"
-									style="width:140px; font-size:40px; text-align:center;"></td>
-						</tr>
-						<tr style="height:68px;">
-							<td>push 56789ABCH</td>
-							<td><input type="text" id="stack_esp2" placeholder="????H"
-									style="width:100px; font-size:40px; text-align:center;"></td>
-							<td><input type="text" id="stack_tos2" placeholder="901??H"
-									style="width:140px; font-size:40px; text-align:center;"></td>
-						</tr>
-						<tr style="height:68px; background:#2e7d32; color:white;">
-							<td>pop EAX</td>
-							<td><input type="text" id="stack_esp3" placeholder="????H"
-									style="width:100px; font-size:40px; text-align:center;"></td>
-							<td><input type="text" id="stack_tos3" placeholder="901??H"
-									style="width:140px; font-size:40px; text-align:center;"></td>
-						</tr>
-					</table>
-
-					<div style="text-align:center; margin-top:40px;">
-						<button onclick="checkStack()" style="font-size:44px; padding:12px 50px;">Check Answers</button>
-						<p id="result" style="font-weight:bold; font-size:52px; margin-top:20px; min-height:70px;"></p>
-					</div>
-				</div>
-			</div>
-
-			<script>
-				function checkStack() {
-					const e1 = document.getElementById('stack_esp1').value.trim().toLowerCase();
-					const t1 = document.getElementById('stack_tos1').value.trim().toLowerCase();
-					const e2 = document.getElementById('stack_esp2').value.trim().toLowerCase();
-					const t2 = document.getElementById('stack_tos2').value.trim().toLowerCase();
-					const e3 = document.getElementById('stack_esp3').value.trim().toLowerCase();
-					const t3 = document.getElementById('stack_tos3').value.trim().toLowerCase();
-
-					const correct = (e1 === '00fc' || e1 === 'fc') && (t1 === '900fc') &&
-						(e2 === '00f8' || e2 === 'f8') && (t2 === '900f8') &&
-						(e3 === '00fc' || e3 === 'fc') && (t3 === '900fc');
-
-					if (correct) {
-						document.getElementById('result').textContent = "Perfect! All correct!";
-						document.getElementById('result').style.color = "#4caf50";
-					} else {
-						document.getElementById('result').textContent = "Try again → push subtracts 4, pop adds 4";
-						document.getElementById('result').style.color = "#e91e63";
-					}
-				}
-			</script>
-		</section>
 
 		<section>
 			<h2>Special stack ops</h2>
@@ -5313,12 +5230,14 @@ popad         ; restore (ESP unchanged by popad)
 
 		<!-- Procedure intro -->
 		<section>
-			<h2>Procedures — quick intro</h2>
+			<h2>Procedures</h2>
 			<p class="fragment">call <b>label</b> — pushes return address, jumps to label</p>
 			<p class="fragment">ret — pops return address into EIP</p>
 			<pre class="code fragment"><code>call myfunc
 ; ... 
+; ... 
 myfunc:
+  ; do work
   ; do work
   ret
 </code></pre>
@@ -5358,6 +5277,81 @@ L1:
 			</select>
 			<button class="small-btn" id="check-ex4-stack">Check</button>
 			<p id="res-ex4" class="result"></p>
+		</section>
+
+		<section>
+			<h2>How is Program Control Transferred?</h2>
+			<p class="fragment">The offset value provided in the call instruction is not the absolute value (i.e.,
+				offset is not relative to the start of the code segment pointed to by the CS register), but a relative
+				displacement in bytes from the instruction following the call instruction.</p>
+			<p class="fragment">Let us look at the following example:</p>
+		</section>
+
+		<section>
+			<h3>Machine Code Example</h3>
+			<pre><code class="hljs" data-trim>
+offset          machine code
+(in hex)        (in hex)
+
+                								main:
+00000002        B816000000      call    sum
+00000007        89C3            mov     EBX,EAX
+
+                ; end of main procedure
+
+
+                								sum:
+0000001D        55              push    EBP
+
+                ; end of sum procedure
+
+
+                								avg:
+00000028        E8F0FFFFFF      call    sum
+0000002D        89D8            mov     EAX,EBX
+
+                ; end of avg procedure
+                </code></pre>
+		</section>
+
+		<section>
+			<h3>After the call Instruction in main</h3>
+			<p>After the <span class="highlight">call</span> instruction in main has been fetched, the EIP register
+				points to the next instruction to be executed (i.e., EIP = 00000007H). This is the instruction that
+				should be executed after completing the execution of sum procedure. The processor makes a note of this
+				by pushing the contents of the EIP register onto the stack.</p>
+		</section>
+
+		<section>
+			<h3>Transfer Control to sum</h3>
+			<p>Now, to transfer control to the first instruction of the sum procedure, the EIP register would have to be
+				loaded with the offset value of the</p>
+			<pre class="fragment"><code>push    EBP</code></pre>
+			<p class="fragment">instruction in sum. To do this, the processor adds the 32-bit relative displacement
+				found in the call instruction to the contents of the EIP register.</p>
+		</section>
+
+		<section>
+			<h3>Understanding the Encoding</h3>
+			<p>Proceeding with our example, the machine language encoding of the call instruction, which requires five
+				bytes, is E816000000H.</p>
+			<ul>
+				<li class="fragment">The first byte E8H is the opcode for the call instruction</li>
+				<li class="fragment">The next four bytes give the (signed) relative displacement in bytes.</li>
+			</ul>
+			<p class="fragment">In this example, it is the difference between 0000001DH (offset of the push EBP
+				instruction in sum) and 00000007H (offset of the instruction mov EBX,EAX in main). Therefore, the
+				displacement should be 0000001DH – 00000007H = 00000016H.</p>
+		</section>
+
+		<section>
+			<h3>Notes on the Example</h3>
+			<p>The relative displacement is stored in little-endian format: 16 00 00 00</p>
+			<p class="fragment">The printed example shows B816000000 for the first call, but standard x86 near call is
+				opcode E8 followed by the 32-bit relative offset. This appears to be a minor inconsistency/typo in the
+				source material (common in older texts). The second call uses E8F0FFFFFF, which is correct opcode but
+				shows a negative offset.</p>
+			<p class="fragment">The core concept remains valid regardless of the exact bytes shown.</p>
 		</section>
 
 		<!-- Advanced: parameter passing -->
