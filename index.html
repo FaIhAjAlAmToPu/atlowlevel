@@ -5162,22 +5162,6 @@ push 99AB8877h</pre>
 		<section>
 			<h2>Exercises: Identify TOS Address</h2>
 			<p>SS = 8000H, ESP = 0200H → TOS = ? (physical address)</p>
-			<input type="text" id="ex1" style="width:100px;">
-			<button onclick="checkEx11Stack()">Check</button>
-			<p id="ex1res"></p>
-			<script>
-				function checkEx11Stack() {
-					let val = document.getElementById('ex1').value.trim().toUpperCase();
-					let correct = "80200H";
-					if (val === correct) {
-						document.getElementById('ex1res').textContent = "Correct! TOS = 80200H";
-						document.getElementById('ex1res').style.color = "green";
-					} else {
-						document.getElementById('ex1res').textContent = "Incorrect. Hint: Physical = SS*16 + ESP";
-						document.getElementById('ex1res').style.color = "red";
-					}
-				}
-			</script>
 		</section>
 
 
@@ -5281,11 +5265,15 @@ L1:
 
 		<section>
 			<h2>How is Program Control Transferred?</h2>
-			<p class="fragment">The offset value provided in the call instruction is not the absolute value (i.e.,
-				offset is not relative to the start of the code segment pointed to by the CS register), but a relative
-				displacement in bytes from the instruction following the call instruction.</p>
-			<p class="fragment">Let us look at the following example:</p>
+			<p class="fragment">
+				The CALL instruction does not use an absolute offset.
+			</p>
+			<p class="fragment">
+				It uses a relative displacement from the next instruction.
+			</p>
+			<p class="fragment">Example:</p>
 		</section>
+
 
 		<section>
 			<h3>Machine Code Example</h3>
@@ -5294,7 +5282,7 @@ offset          machine code
 (in hex)        (in hex)
 
                 								main:
-00000002        B816000000      call    sum
+00000002        E816000000      call    sum
 00000007        89C3            mov     EBX,EAX
 
                 ; end of main procedure
@@ -5315,44 +5303,283 @@ offset          machine code
 		</section>
 
 		<section>
-			<h3>After the call Instruction in main</h3>
-			<p>After the <span class="highlight">call</span> instruction in main has been fetched, the EIP register
-				points to the next instruction to be executed (i.e., EIP = 00000007H). This is the instruction that
-				should be executed after completing the execution of sum procedure. The processor makes a note of this
-				by pushing the contents of the EIP register onto the stack.</p>
+			<h3>After the CALL Instruction in main</h3>
+			<p class="fragment">
+				After executing <span class="highlight">CALL</span>, EIP moves to the next instruction.
+			</p>
+			<p class="fragment">
+				Here, EIP becomes <b>00000007H</b>.
+			</p>
+			<p class="fragment">
+				This address is where execution will continue after <b>sum</b> finishes.
+			</p>
+			<p class="fragment">
+				<b>The processor saves this address by pushing EIP onto the stack.</b>
+			</p>
 		</section>
+
 
 		<section>
 			<h3>Transfer Control to sum</h3>
-			<p>Now, to transfer control to the first instruction of the sum procedure, the EIP register would have to be
-				loaded with the offset value of the</p>
-			<pre class="fragment"><code>push    EBP</code></pre>
-			<p class="fragment">instruction in sum. To do this, the processor adds the 32-bit relative displacement
-				found in the call instruction to the contents of the EIP register.</p>
+			<p class="fragment">
+				Control jumps to the first instruction of <b>sum</b>.
+			</p>
+			<pre class="fragment"><code>push EBP</code></pre>
+			<p class="fragment">
+				New EIP = current EIP + CALL displacement.
+			</p>
 		</section>
+
 
 		<section>
 			<h3>Understanding the Encoding</h3>
-			<p>Proceeding with our example, the machine language encoding of the call instruction, which requires five
-				bytes, is E816000000H.</p>
+			<p class="fragment">
+				The <b>CALL</b> instruction uses <b>5 bytes</b>.
+			</p>
+			<pre class="fragment"><code>E8 16 00 00 00</code></pre>
 			<ul>
-				<li class="fragment">The first byte E8H is the opcode for the call instruction</li>
-				<li class="fragment">The next four bytes give the (signed) relative displacement in bytes.</li>
+				<li class="fragment"><b>E8</b> → opcode for CALL</li>
+				<li class="fragment"><b>16 00 00 00</b> → relative displacement</li>
 			</ul>
-			<p class="fragment">In this example, it is the difference between 0000001DH (offset of the push EBP
-				instruction in sum) and 00000007H (offset of the instruction mov EBX,EAX in main). Therefore, the
-				displacement should be 0000001DH – 00000007H = 00000016H.</p>
 		</section>
 
 		<section>
-			<h3>Notes on the Example</h3>
-			<p>The relative displacement is stored in little-endian format: 16 00 00 00</p>
-			<p class="fragment">The printed example shows B816000000 for the first call, but standard x86 near call is
-				opcode E8 followed by the 32-bit relative offset. This appears to be a minor inconsistency/typo in the
-				source material (common in older texts). The second call uses E8F0FFFFFF, which is correct opcode but
-				shows a negative offset.</p>
-			<p class="fragment">The core concept remains valid regardless of the exact bytes shown.</p>
+			<h3>Calculating the Displacement</h3>
+			<p class="fragment">
+				Displacement = target − next instruction
+			</p>
+			<pre class="fragment"><code>
+Target (sum)      = 0000001D
+Next instruction  = 00000007
+Displacement      = 00000016
+  </code></pre>
 		</section>
+
+
+
+		<section>
+			<h3>Notes on the Example</h3>
+			<p class="fragment">
+				The displacement is stored in <b>little-endian</b>(LSB first) format.
+			</p>
+			<pre class="fragment"><code>16 00 00 00</code></pre>
+		</section>
+
+		<section>
+			<h3>Backward Procedure Call</h3>
+			<p class="fragment">
+				In <b>avg</b>, CALL <b>sum</b> jumps backward.
+			</p>
+			<p class="fragment">
+				Target address &lt; next instruction → negative displacement.
+			</p>
+			<pre class="fragment"><code>
+Displacement = 0000001D - 0000002D
+             = FFFFFFF0H
+             = -16D
+    </code></pre>
+		</section>
+
+		<section>
+			<h3>2's Complement Representation</h3>
+			<p class="fragment">
+				Negative displacements are stored in <b>2's complement</b>.
+			</p>
+			<p class="fragment">
+				FFFFFFF0H represents <b>-16 decimal</b>.
+			</p>
+		</section>
+
+		<section>
+			<h3>Stack Action During CALL</h3>
+			<p class="fragment">
+				Return address is pushed onto the stack.
+			</p>
+			<pre class="fragment"><code>
+ESP = ESP - 4
+SS:ESP = EIP
+    </code></pre>
+		</section>
+
+		<section>
+			<h3>Updating EIP</h3>
+			<p class="fragment">
+				EIP = EIP + relative displacement
+			</p>
+			<p class="fragment">
+				Signed 32-bit displacement allows <b>forward & backward calls</b>.
+			</p>
+		</section>
+
+		<section>
+			<h3>Summary of Near CALL</h3>
+			<ul class="fragment">
+				<li>Push return address onto stack</li>
+				<li>Compute displacement (target − next instruction)</li>
+				<li>Update EIP with displacement</li>
+				<li>Displacement is signed 32-bit</li>
+			</ul>
+		</section>
+		<section>
+			<h3>Exercise: Understanding Near CALL and Return Address</h3>
+			<p>Study the following machine code layout carefully.</p>
+			<pre><code class="hljs" data-trim>
+offset          machine code
+(in hex)        (in hex)
+
+                								start:
+00000000        xxxxxxxxxx      call    calculate
+00000005        89C2            mov     EDX,EAX
+
+                ; end of start procedure
+
+
+                								calculate:
+00000012        55              push    EBP
+00000013        8B55 08         mov     EDX,[EBP+8]
+00000016        03C2            add     EAX,EDX
+                								; ... more instructions ...
+
+                								finish:
+00000030        xxxxxxxxxx      call    calculate
+00000035        F7D8            neg     EAX
+
+                ; end of finish procedure
+                </code></pre>
+		</section>
+
+		<section>
+			<h3>Question 1: Return Address After CALL in <code>start</code></h3>
+			<p>When the CALL at offset <code>00000000</code> is executed, what address is pushed onto the stack as the
+				return address?</p>
+			<p class="fragment">This is the address of the instruction that should be executed when
+				<code>calculate</code> returns.
+			</p>
+
+			<input id="tc-ex1-q1" type="text" placeholder="Enter address in hex, e.g. 00000005"
+				style="width: 300px; font-family: monospace;">
+			<button onclick="checkTCEx1Q1()">Check Answer</button>
+			<p id="tc-ex1-q1-feedback" style="margin-top: 10px; font-weight: bold;"></p>
+
+			<script>
+				function checkTCEx1Q1() {
+					const input = document.getElementById('tc-ex1-q1').value.trim().toUpperCase().replace(/H$/, '');
+					const feedback = document.getElementById('tc-ex1-q1-feedback');
+					const correct = ['00000005', '5', '00000005H', '5H'];
+					if (correct.some(c => c === input)) {
+						feedback.textContent = 'Correct! The next instruction after the 5-byte CALL is at 00000005.';
+						feedback.style.color = 'green';
+					} else {
+						feedback.textContent = 'Incorrect. Hint: The CALL instruction is 5 bytes long.';
+						feedback.style.color = 'red';
+					}
+				}
+			</script>
+		</section>
+
+		<section>
+			<h4>Machine Code for the Forward CALL</h4>
+			<p>The near CALL instruction has the opcode <code>E8</code> and uses a 32-bit relative displacement (5 bytes
+				total).</p>
+			<p>What is the complete machine code (in hexadecimal) for the <code>call calculate</code> instruction at
+				offset <code>00000000</code>?</p>
+			<p class="fragment">Hint: First byte is the opcode, followed by the 4-byte displacement in little-endian
+				order.</p>
+
+			<input id="tc-ex1-q2" type="text" placeholder="e.g. E81E000000"
+				style="width: 300px; font-family: monospace;">
+			<button onclick="checkTCEx1Q2()">Check Answer</button>
+			<p id="tc-ex1-q2-feedback" style="margin-top: 10px; font-weight: bold;"></p>
+
+			<script>
+				function checkTCEx1Q2() {
+					const input = document.getElementById('tc-ex1-q2').value.trim().toUpperCase().replace(/ /g, '');
+					const feedback = document.getElementById('tc-ex1-q2-feedback');
+					const correct = ['E81E000000', 'E8 1E 00 00 00'];
+					if (correct.some(c => input === c || input === c.replace(/ /g, ''))) {
+						feedback.textContent = 'Correct!';
+						feedback.style.color = 'green';
+					} else {
+						feedback.textContent = 'Wrong. displacement -> little-endian after E8.';
+						feedback.style.color = 'red';
+					}
+				}
+			</script>
+		</section>
+
+		<section>
+			<h4>Backward CALL in <code>finish</code></h4>
+			<p>If the near CALL instruction has the opcode <code>E8</code> and uses a 32-bit relative displacement, then find the the complete machine code (in hexadecimal) for the <code>call calculate</code> instruction at
+				offset <code>00000030</code>?</p>
+			<p class="fragment">Hint: First byte is the opcode, followed by the 4-byte displacement in little-endian
+				order.</p>
+
+			<input id="tc-ex1-q3" type="text" placeholder="e.g. E8DDFFFFFF"
+				style="width: 300px; font-family: monospace;">
+			<button onclick="checkTCEx1Q3()">Check Answer</button>
+			<p id="tc-ex1-q3-feedback" style="margin-top: 10px; font-weight: bold;"></p>
+
+			<script>
+				function checkTCEx1Q3() {
+					const input = document.getElementById('tc-ex1-q3').value.trim().toUpperCase().replace(/ /g, '');
+					const feedback = document.getElementById('tc-ex1-q3-feedback');
+					const correct = ['E8DDFFFFFF', 'E8 DD FF FF FF'];
+					if (correct.some(c => input === c || input === c.replace(/ /g, ''))) {
+						feedback.textContent = 'Correct!';
+						feedback.style.color = 'green';
+					} else {
+						feedback.textContent = 'Wrong. displacement -> little-endian after E8.';
+						feedback.style.color = 'red';
+					}
+				}
+			</script>
+		</section>
+
+
+		<section>
+			<h3>Question 4: Multiple Choice – What happens during a near CALL?</h3>
+			<p>Select <strong>all</strong> correct actions that occur when a near CALL executes.</p>
+
+			<form id="tc-ex1-q4-form" style="font-size: 0.8em; line-height: 1.6;">
+				<label><input type="checkbox" name="opt" value="1"> 1. The return address (next instruction) is pushed
+					onto the stack</label><br>
+				<label><input type="checkbox" name="opt" value="2"> 2. EIP is set to the absolute address of the target
+					procedure</label><br>
+				<label><input type="checkbox" name="opt" value="3"> 3. A signed 32-bit displacement is added to the
+					current EIP</label><br>
+				<label><input type="checkbox" name="opt" value="4"> 4. The flags register is saved on the
+					stack</label><br>
+				<label><input type="checkbox" name="opt" value="5"> 5. ESP is decremented by 4 before pushing the return
+					address</label><br>
+			</form>
+
+			<button onclick="checkTCEx1Q4()">Check Answers</button>
+			<p id="tc-ex1-q4-feedback" style="margin-top: 10px; font-weight: bold;"></p>
+
+			<script>
+				function checkTCEx1Q4() {
+					const checks = document.querySelectorAll('#tc-ex1-q4-form input[type="checkbox"]');
+					const selected = Array.from(checks).filter(c => c.checked).map(c => c.value);
+					const feedback = document.getElementById('tc-ex1-q4-feedback');
+					const correct = ['1', '3', '5'];  // 1,3,5 are correct
+
+					const correctSet = new Set(correct);
+					const selectedSet = new Set(selected);
+
+					if (selected.length === correct.length && selected.every(v => correctSet.has(v))) {
+						feedback.textContent = 'Perfect! All correct choices selected.';
+						feedback.style.color = 'green';
+					} else {
+						feedback.textContent = 'Not quite. Review what happens on a near CALL.';
+						feedback.style.color = 'red';
+					}
+				}
+			</script>
+		</section>
+
+
+
+
 
 		<!-- Advanced: parameter passing -->
 		<section>
