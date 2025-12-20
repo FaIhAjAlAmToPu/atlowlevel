@@ -1178,7 +1178,7 @@ mov eax, ds:[ebx]     ; logical address = DS : EBX
 
 				<!-- Slide 10 -->
 				<section data-background-color="#0d1117">
-					<h3 style="color:#ff9800">Question: One giant table for the whole system?</h2>
+					<h3 style="color:#ff9800">Question: One giant table for the whole system?</h3>
 						<p style="font-size:40px;">
 							Or should every program get its own private table?
 						</p>
@@ -1201,11 +1201,11 @@ mov eax, ds:[ebx]     ; logical address = DS : EBX
 				</section>
 
 				<section data-background-color="#0d1117">
-					<h3 style="color:#ff9800">The Two Tables</h2>
+					<h4 style="color:#ff9800">The Two Tables</h4>
 						<div style="display:flex; justify-content:center; gap:100px; margin-top:60px;">
 							<div style="background:#1e88e5; padding:30px; border-radius:16px; width:45%;">
 								<h4 style="color:white;">Global Descriptor Table (GDT)
-					</h3>
+					</h4>
 					<ul style="color:white; font-size:30px;">
 						<li>Exactly <strong>one</strong> per system</li>
 						<li>Shared by everyone</li>
@@ -1214,7 +1214,7 @@ mov eax, ds:[ebx]     ; logical address = DS : EBX
 		</div>
 
 		<div style="background:#7b1fa2; padding:30px; border-radius:16px; width:45%;">
-			<h4 style="color:white;">Local Descriptor Table (LDT)</h3>
+			<h4 style="color:white;">Local Descriptor Table (LDT)</h4>
 				<ul style="color:white; font-size:30px;">
 					<li class="fragment">Zero or <strong>one per process</strong></li>
 					<li>Private segments for that program</li>
@@ -1231,7 +1231,7 @@ mov eax, ds:[ebx]     ; logical address = DS : EBX
 
 	<!-- Slide 1 – We have the table… now what? -->
 	<section data-background-color="#0d1117">
-		<h3 style="color:#ff9800">We now have a huge table full of descriptors…</h2>
+		<h3 style="color:#ff9800">We now have a huge table full of descriptors…</h3>
 			<p style="font-size:65px; margin-top:140px; color:#ffcc80;">
 				New problem:
 			</p>
@@ -1626,7 +1626,7 @@ Linear address = 0x00000000 + 0x00401000 = 0x00401000
 
 	<!-- Slide 2 – How to make segmentation disappear -->
 	<section data-background-color="#0d1117">
-		<h3 style="color:#ff9800">How to Make Segmentation Invisible</h2>
+		<h3 style="color:#ff9800">How to Make Segmentation Invisible</h3>
 			<p style="font-size:40px; color:#e0e0e0;">
 				Just create segment descriptors like this:
 			</p>
@@ -3332,7 +3332,7 @@ mov [EBX], 95
 
 		<section>
 			<h3>MOV Examples (Variety)</h3>
-			<pre><pre><code class="hljs" style="font-size: 0.8em;">
+			<pre><code class="hljs" style="font-size: 0.8em;">
 mov AL, 'A'          ; immediate → 8-bit reg
 mov BX, 5000h        ; immediate → 16-bit reg
 mov EDX, 0FFFFFFFFh   ; immediate → 32-bit reg
@@ -5576,20 +5576,115 @@ offset          machine code
 				}
 			</script>
 		</section>
-
-
-
-
-
-		<!-- Advanced: parameter passing -->
 		<section>
-			<h2>Parameter Passing (brief)</h2>
+			<h3>Procedure Call</h3>
+
 			<ul>
-				<li class="fragment"><b>Stack-based:</b> push args right-to-left; callee pops/reads</li>
-				<li class="fragment"><b>Register-based:</b> some ABIs use registers for first args</li>
-				<li class="fragment">Variable number of args easy with stack (push count or sentinel)</li>
+				<li>A procedure (function) is a reusable block of code</li>
+				<li>The <code>call</code> instruction jumps to the function</li>
+				<li><code>call</code> also saves the return address on the stack</li>
 			</ul>
+
+			<pre>
+call sum
+↓
+return address pushed
+  </pre>
 		</section>
+		<section>
+			<h3>Creating a Stack Frame</h3>
+
+			<ul>
+				<li>The callee saves the old base pointer</li>
+				<li>A new stack frame is created</li>
+				<li><code>EBP</code> becomes the reference point</li>
+			</ul>
+
+			<pre><code class="language-asm">
+push ebp
+mov  ebp, esp
+  </code></pre>
+		</section>
+
+		<section>
+			<h3>Inside the Stack Frame</h3>
+
+			<pre>
+Higher Memory
+┌────────────────────┐
+│ function arguments │ ← [EBP + 8]
+├────────────────────┤
+│ return address     │ ← [EBP + 4]
+├────────────────────┤
+│ saved EBP          │ ← [EBP]
+└────────────────────┘
+Lower Memory
+  </pre>
+
+			<p><small>
+				Stack grows downward
+			</small></p>
+		</section>
+
+
+		<section>
+			<h3>An example C Function</h3>
+
+			<pre><code class="language-c">
+int sum(int x, int y)
+{
+    return (x + y);
+}
+  </code></pre>
+
+			<p><small>
+				Two parameters, returns their sum
+			</small></p>
+		</section>
+		<section>
+			<h3>Stack Frame for <code>sum(int x, int y)</code></h3>
+
+			<pre>
+Higher Memory Addresses
+┌─────────────────────────┐
+│ y                       │ ← [EBP + 12]
+├─────────────────────────┤
+│ x                       │ ← [EBP + 8]
+├─────────────────────────┤
+│ return address          │ ← [EBP + 4]
+├─────────────────────────┤
+│ saved EBP               │ ← [EBP]
+└─────────────────────────┘
+Lower Memory Addresses
+  </pre>
+
+			<p><small>
+				Stack grows downward (toward lower addresses)
+			</small></p>
+		</section>
+
+
+		<section>
+			<h3>x86 Assembly (32-bit, cdecl)</h3>
+
+			<pre><code class="language-asm">
+sum:
+    push ebp            ; save caller's base pointer
+    mov  ebp, esp       ; establish new stack frame
+
+    mov  eax, [ebp+8]   ; load x
+    add  eax, [ebp+12]  ; add y
+
+    pop  ebp            ; restore caller's frame
+    ret                 ; return (result in EAX)
+  </code></pre>
+
+			<p><small>
+				Return value is placed in <b>EAX</b>
+			</small></p>
+		</section>
+
+
 
 		<!-- Practice problems -->
 		<section>
