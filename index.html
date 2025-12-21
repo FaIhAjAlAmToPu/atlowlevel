@@ -5949,12 +5949,494 @@ Lower Memory Addresses
 				</section>
 
 
+				<section>
+					<h1>Dive deep</h1>
+				</section>
+
+				<section>
+					<h3>Execution Step 1</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+➡   int r;
+    r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+Higher Addresses
+┌───────────────┐
+│ ret → caller  │
+├───────────────┤
+│ saved EBP     │
+├───────────────┤ ← EBP (func)
+│ r             │
+└───────────────┘
+Lower Addresses
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h3>Execution Step 2</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+➡   r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+Higher Addresses
+┌───────────────┐
+│ ret → caller  │
+├───────────────┤
+│ saved EBP     │
+├───────────────┤ ← EBP (func)
+│ r             │
+├───────────────┤
+│ 5             │
+├───────────────┤
+│ 2             │
+└───────────────┘
+Lower Addresses
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h3>Execution Step 3</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+➡   r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+Higher Addresses
+┌───────────────┐
+│ ret → caller  │
+├───────────────┤
+│ saved EBP     │
+├───────────────┤ ← EBP (func)
+│ r             │
+├───────────────┤
+│ 5             │
+├───────────────┤
+│ 2             │
+├───────────────┤
+│ ret → func    │
+└───────────────┘
+Lower Addresses
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h3>Execution Step 4</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+➡   int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+    r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+Higher Addresses
+┌───────────────┐
+│ y             │ ← [EBP+12]
+├───────────────┤
+│ x             │ ← [EBP+8]
+├───────────────┤
+│ ret → func    │ ← [EBP+4]
+├───────────────┤
+│ saved EBP     │ ← [EBP]
+├───────────────┤
+│ m             │ ← [EBP-4]
+└───────────────┘
+Lower Addresses
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h3>Execution Step 5</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+➡   m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+    r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+m = 10
+EAX = 10
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h3>Execution Step 6</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+➡   return m;
+}
+
+int func()
+{
+    int r;
+    r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+mul() frame destroyed
+Return value in EAX
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+
+				<section>
+					<h3>Execution Step 7</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+➡   r = mul(2, 5);
+    return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+Higher Addresses
+┌───────────────┐
+│ ret → caller  │
+├───────────────┤
+│ saved EBP     │
+├───────────────┤ ← EBP (func)
+│ r = 10        │
+└───────────────┘
+Lower Addresses
+</pre>
+						</div>
+
+					</div>
+				</section>
 
 
 
 
 
 
+
+
+
+				<section>
+					<h3>Execution Step 8</h3>
+
+					<div style="display:flex; gap:40px;">
+
+						<div style="width:50%;">
+							<pre><code class="language-c">
+int mul(int x, int y)
+{
+    int m;
+    m = x * y;
+    return m;
+}
+
+int func()
+{
+    int r;
+    r = mul(2, 5);
+➡   return r;
+}
+</code></pre>
+						</div>
+
+						<div style="width:50%;">
+							<pre>
+Stack
+All frames removed
+Execution complete
+</pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<section>
+					<h2>Procedure: Sum of Three Numbers</h2>
+					<p>Write a procedure <strong>sum3</strong> that receives three integers and returns their sum.</p>
+					<pre><code>
+int sum3(int a, int b, int c) {
+    return a + b + c;
+}
+    </code></pre>
+				</section>
+
+				<section>
+					<h2>Assembly: Sum of Three Numbers</h2>
+					<pre><code>
+sum3:               ; sum3(a, b, c)
+    push    ebp
+    mov     ebp, esp
+
+    mov     ax, [ebp + 8]   ; a
+    add     ax, [ebp + 12]  ; + b
+    add     ax, [ebp + 16]  ; + c
+
+    pop     ebp
+    ret
+    </code></pre>
+				</section>
+
+				<section>
+					<h2>Procedure: Maximum of Two Numbers</h2>
+					<p>Write a procedure <strong>max2</strong> that receives two integers and returns the maximum.</p>
+					<pre><code>
+int max2(int a, int b) {
+    if (a &gt;= b) return a;
+    else return b;
+}
+    </code></pre>
+				</section>
+
+				<section>
+					<h2>Assembly: Maximum of Two Numbers</h2>
+					<pre><code>
+max2:               ; max2(a, b)
+    push    ebp
+    mov     ebp, esp
+
+    mov     ax, [ebp + 8]   ; a
+    cmp     ax, [ebp + 12]  ; compare with b
+    jl      use_b           ; if a &lt; b, use b
+    jmp     done
+
+use_b:
+    mov     ax, [ebp + 12]  ; AX = b
+
+done:
+    pop     ebp
+    ret
+    </code></pre>
+				</section>
+
+
+
+
+
+
+				<section>
+					<h2>Procedure: Find Maximum of Three Numbers</h2>
+					<p>Write a procedure <strong>max</strong> that receives three integers from <em>main</em> and
+						returns the maximum in <strong>AX</strong>.</p>
+
+					<h3>Example in C</h3>
+					<pre><code>
+int max(int a, int b, int c) {
+    if (a &gt;= b && a &gt;= c) return a;
+    else if (b &gt;= c) return b;
+    else return c;
+}
+    </code></pre>
+				</section>
+
+
+				<section>
+					<h2>Assembly: Procedure max</h2>
+					<pre><code>
+max:                ; label marking start of procedure
+    push    ebp
+    mov     ebp, esp
+
+    mov     ax, [ebp + 8]   ; a
+    cmp     ax, [ebp + 12]  ; b
+    jl      check_b
+    cmp     ax, [ebp + 16]  ; c
+    jl      load_c
+    jmp     done
+
+check_b:
+    mov     ax, [ebp + 12]  ; b
+    cmp     ax, [ebp + 16]  ; c
+    jl      load_c
+
+done:
+    pop     ebp
+    ret
+
+load_c:
+    mov     ax, [ebp + 16]  ; c
+    jmp     done
+
+    </code></pre>
+				</section>
+
+				<section>
+					<h2>Procedure: Count String Length</h2>
+					<p>Use a loop to count the number of characters in a NULL-terminated string.</p>
+					<pre><code>
+int strlen_loop(char *str) {
+    int len = 0;
+    while (str[len] != '\0') {
+        len++;
+    }
+    return len;
+}
+    </code></pre>
+				</section>
+
+
+				<section>
+					<h2>Assembly: Count String Length</h2>
+					<pre><code>
+strlen_loop:              ; strlen_loop(str)
+    push    ebp
+    mov     ebp, esp
+
+    mov     esi, [ebp + 8]   ; ESI = pointer to string
+    xor     cx, cx            ; CX = counter (length)
+
+count_loop:
+    mov     al, [esi + cx]   ; load current character
+    cmp     al, 0
+    je      done             ; exit loop if NULL
+    inc     cx               ; increment counter
+    jmp     count_loop
+
+done:
+    mov     ax, cx           ; return length in AX
+    pop     ebp
+    ret
+    </code></pre>
+				</section>
 
 
 
