@@ -6574,8 +6574,417 @@ func:
 
 
 
+			<section>
+				<section>
+					<h1>Memory Addressing Overview</h1>
+				</section>
+				<section>
+					<h2>RISC vs CISC</h2>
+					<div style="display: flex; gap: 20px;">
+						<!-- Left Card: RISC -->
+						<div
+							style="flex: 1; background: #00BCD4; padding: 15px; border-radius: 10px; box-shadow: 2px 2px 8px rgba(0,0,0,0.2);">
+							<h3>RISC</h3>
+							<ul>
+								<li>Load/Store only</li>
+								<li>Very few addressing modes</li>
+							</ul>
+						</div>
+
+						<!-- Right Card: CISC -->
+						<div
+							style="flex: 1; background: #FF4081; padding: 15px; border-radius: 10px; box-shadow: 2px 2px 8px rgba(0,0,0,0.2);">
+							<h3>CISC (Pentium)</h3>
+							<ul>
+								<li>Many powerful addressing modes</li>
+								<li>Direct memory operations</li>
+							</ul>
+						</div>
+					</div>
+				</section>
 
 
+				<section>
+					<h2>Main Categories</h2>
+					<ul>
+						<li>Register</li>
+						<li>Immediate</li>
+						<li><strong>Memory</strong> (today's focus)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Effective Address (32-bit)</h2>
+					<p><strong>Base + (Index × Scale) + Displacement</strong></p>
+				</section>
+
+				<section>
+					<h2>Register Addressing</h2>
+					<p>Fastest</p>
+					<pre><code>mov EAX, EBX</code></pre>
+					<pre><code>add ECX, EDX</code></pre>
+				</section>
+
+				<section>
+					<h2>Immediate Addressing</h2>
+					<pre><code>mov EAX, 123</code></pre>
+					<pre><code>add EBX, 10h</code></pre>
+				</section>
+
+				<section>
+					<h2>Direct Addressing</h2>
+					<p>[displacement]</p>
+					<pre><code>mov EAX, [1000h]</code></pre>
+					<p>Global variables</p>
+				</section>
+
+				<section>
+					<h2>Register Indirect</h2>
+					<p>[Base]</p>
+					<pre><code>mov EAX, [EBX]</code></pre>
+					<p>Simple pointers</p>
+				</section>
+
+				<section>
+					<h2>Based Addressing</h2>
+					<p>[Base + disp]</p>
+					<pre><code>mov EAX, [EBX + 20]</code></pre>
+					<p>Structure/record fields</p>
+				</section>
+
+				<section>
+					<h2>Based Example</h2>
+					<p>Course record (EBX = base)</p>
+					<pre><code>mov EAX, [EBX + 46]  ; # registered</code></pre>
+					<pre><code>mov ECX, [EBX + 48]  ; limit</code></pre>
+				</section>
+
+				<section>
+					<h2>Indexed Addressing</h2>
+					<p>[Index × scale + disp]</p>
+					<pre><code>mov EAX, [ESI*4 + array]</code></pre>
+					<p>Arrays – no byte counting!</p>
+				</section>
+
+				<section>
+					<h2>Indexed Example</h2>
+					<p>int marks[100]</p>
+					<pre><code>; ESI = index (0-based)
+mov EAX, [marks + ESI*4]</code></pre>
+					<p>ESI = 9 → 10th element</p>
+				</section>
+
+				<section>
+					<h2>Based-Indexed (no scale)</h2>
+					<p>[Base + Index + disp]</p>
+					<pre><code>mov EAX, [EBX + ESI]</code></pre>
+				</section>
+
+				<section>
+					<h2>Based-Indexed Example</h2>
+					<pre><code>mov EAX, [EBX + ESI]        ; current
+mov ECX, [EBX + ESI + 4]    ; next</code></pre>
+					<p>Compare successive elements</p>
+				</section>
+
+				<section>
+					<h2>Based-Indexed with Scale</h2>
+					<p>[Base + Index × scale + disp]</p>
+					<pre><code>mov EAX, [EBX + ESI*4]</code></pre>
+					<p>Ideal for 2D arrays</p>
+				</section>
+
+				<section>
+					<h2>2D Array Example</h2>
+					<p>matrix[row][col] – 10 cols × 4 bytes</p>
+					<pre><code>; EBX = matrix base
+; ESI = row
+; ECX = col
+mov EAX, [EBX + ESI*40 + ECX*4]</code></pre>
+				</section>
+
+				<section>
+					<h2>16-bit vs 32-bit</h2>
+					<ul>
+						<li>Base: BX/BP → Any register</li>
+						<li>Index: SI/DI → Any register</li>
+						<li>Scale: None → 1,2,4,8</li>
+						<li>Displacement: smaller → larger</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>
+						Arrays
+					</h1>
+				</section>
+
+				<section>
+					<h2>Why Arrays?</h2>
+					<p>Organize related data</p>
+					<ul>
+						<li>Test marks of a class</li>
+						<li>Salaries of employees</li>
+						<li>Strings (char arrays)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>C vs Assembly</h2>
+					<p>C handles everything automatically</p>
+					<pre><code>int test_marks[10];</code></pre>
+					<p>Assembly: You allocate space only</p>
+					<pre><code>test_marks resd 10    ; 10 × 4 bytes</code></pre>
+					<p>You must manage indexing yourself!</p>
+				</section>
+
+				<section>
+					<h2>One-Dimensional Arrays</h2>
+					<p>Stored linearly in memory</p>
+					<p>Order: index 0 → index 1 → ... → index n-1</p>
+					<p>Low memory → High memory</p>
+				</section>
+
+				<section>
+					<h2>Accessing 1D Array Elements</h2>
+					<p>Displacement = index × element_size</p>
+					<pre><code>; Example: int array (4 bytes)
+mov EAX, [array + ESI*4]   ; ESI = index</code></pre>
+					<p>Scale factor 4 avoids manual multiplication</p>
+				</section>
+
+				<section>
+					<h2>Scale Factor</h2>
+					<ul>
+						<li>Element size 1 byte → scale 1 (or none)</li>
+						<li>2 bytes (word) → scale 2</li>
+						<li>4 bytes (dword) → scale 4</li>
+						<li>8 bytes (qword) → scale 8</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Example: Length of 1D Array</h2>
+					<pre><code>test_marks dd 90,50,70,94,81,40,67,55,60,73
+NO_STUDENTS EQU ($-test_marks)/4</code></pre>
+				</section>
+
+				<!-- Slide 1: Title -->
+				<section>
+					<h2>Understanding `$` in Assembly</h2>
+					<p>Makes it easy to calculate array sizes and offsets</p>
+				</section>
+
+				<!-- Slide 3: Meaning of `$` -->
+				<section>
+					<h2>The `$` Symbol</h2>
+					<ul>
+						<li><code>$</code> = current address (location counter) in memory</li>
+						<li><code>test_marks</code> = address of first element</li>
+						<li><code>$ - test_marks</code> = total size of array in bytes</li>
+					</ul>
+				</section>
+
+				<!-- Slide 4: Size Calculation -->
+				<section>
+					<h2>Calculating Number of Students</h2>
+					<pre>
+$ - test_marks = total bytes of array
+Array has 10 elements × 4 bytes = 40 bytes
+NO_STUDENTS = (40)/4 = 10
+  </pre>
+					<p>Gives the number of elements in the array</p>
+				</section>
+
+				<!-- Slide 5: Memory Diagram -->
+				<section>
+					<h2>Memory Layout</h2>
+					<pre>
+Address      Value
+1000         90
+1004         50
+1008         70
+1012         94
+1016         81
+1020         40
+1024         67
+1028         55
+1032         60
+1036         73
+$ = 1040 (address immediately after last element)
+$ - test_marks = 1040 - 1000 = 40 bytes
+NO_STUDENTS = 40 / 4 = 10
+  </pre>
+				</section>
+
+				<section>
+					<h2>Memory Layout and $ Example</h2>
+					<div style="display: flex; gap: 20px;">
+
+						<!-- Left Card: Code -->
+						<div style="flex: 1; padding: 15px; border-radius: 8px; border: 1px solid #000; ">
+							<h3>Assembly Code</h3>
+							<pre>
+; Assume DS segment starts at offset 0
+var1 dd 10      ; first variable
+var2 dd 20      ; second variable
+      </pre>
+						</div>
+
+						<!-- Right Card: Memory Layout -->
+						<div style="flex: 1; padding: 15px; border-radius: 8px; border: 1px solid #000;">
+							<h3>Memory Layout</h3>
+							<pre>
+Offset   Variable   Value
+0        var1       10      ; $ after var1 = 4
+4        var2       20      ; $ after var2 = 8
+      </pre>
+						</div>
+
+					</div>
+				</section>
+
+
+				<!-- Slide 6: Summary -->
+				<section>
+					<h2>Summary</h2>
+					<ul>
+						<li>`$` gives the current memory address</li>
+						<li>`$ - label` gives size in bytes of data block</li>
+						<li>Divide by element size to get number of elements</li>
+						<li>Works for any array length dynamically</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Example: Sum of 1D Array</h2>
+					<pre><code>test_marks dd 90,50,70,94,81,40,67,55,60,73
+NO_STUDENTS EQU ($-test_marks)/4
+
+mov ECX, NO_STUDENTS
+mov EAX, 0
+mov ESI, 0
+add_loop:
+    add EAX, [test_marks + ESI*4]
+    inc ESI
+    loop add_loop</code></pre>
+				</section>
+
+				<section>
+					<h4>Sum of 1D Array: C vs Assembly</h4>
+					<div style="display: flex;">
+
+						<!-- Left Column: C Code -->
+						<div style="width: 60%; text-align: center;">
+							<h3>C Code</h3>
+							<pre style="display:inline-block; text-align:left;"><code>int test_marks[] = {90,50,70,94,81,40,67,55,60,73};
+int NO_STUDENTS = sizeof(test_marks)/sizeof(test_marks[0]);
+int sum = 0;
+for(int i = 0; i < NO_STUDENTS; i++) {
+    sum += test_marks[i];
+}</code></pre>
+						</div>
+
+						<!-- Right Column: Assembly Code -->
+						<div style="flex: 1; padding-left: 20px;">
+							<h3>Assembly Code</h3>
+							<pre><code>test_marks dd 90,50,70,94,81,40,67,55,60,73
+NO_STUDENTS EQU ($-test_marks)/4
+
+mov ECX, NO_STUDENTS
+xor EAX, EAX        ; sum = 0
+xor ESI, ESI        ; index = 0
+
+add_loop:
+    add EAX, [test_marks + ESI*4]
+    inc ESI
+    loop add_loop</code></pre>
+						</div>
+
+					</div>
+				</section>
+
+
+
+
+				<section>
+					<h2>Two-Dimensional Arrays</h2>
+					<p>C declaration</p>
+					<pre><code>int class_marks[5][3];  // 5 rows × 3 columns</code></pre>
+					<p>Assembly storage</p>
+					<pre><code>class_marks resd 5*3    ; just 60 bytes</code></pre>
+				</section>
+
+				<section>
+					<h2>Storage Order Matters!</h2>
+					<p>Row-major (used by C)</p>
+					<p>Elements stored row by row</p>
+					<p>[0,0] [0,1] [0,2] [1,0] [1,1] [1,2] ...</p>
+					<p>Column-major (FORTRAN) – different!</p>
+				</section>
+
+				<section>
+					<h2>Row-Major Formula</h2>
+					<p>For element [i][j]</p>
+					<p>Displacement = (i × COLUMNS + j) × ELEMENT_SIZE</p>
+					<pre><code>; Example: i in EBX, j in ESI
+mov EAX, [base + EBX*ROW_SIZE_BYTES + ESI*ELEM_SIZE]</code></pre>
+				</section>
+
+				<section>
+					<h2>Example: Sum of Last Column</h2>
+					<p>5 students × 3 tests (word = 2 bytes)</p>
+					<pre><code>; Define the array (15 words = 5×3)
+class_marks dw 85,90,78    ; Student 1
+             dw 70,65,80    ; Student 2
+             dw 92,88,76    ; Student 3
+             dw 60,75,68    ; Student 4
+             dw 82,91,79    ; Student 5
+NO_ROWS EQU 5
+NO_COLUMNS EQU 3
+ROW_SIZE_BYTES EQU NO_COLUMNS * 2   ; 6
+
+mov ECX, NO_ROWS
+mov AX, 0
+mov EBX, 0                     	 ; row offset
+mov ESI, NO_COLUMNS-1            ; column = 2
+sum_loop:
+    add AX, [class_marks + EBX*ROW_SIZE_BYTES + ESI*2]
+    inc EBX
+    loop sum_loop</code></pre>
+				</section>
+
+				<section>
+					<h2>Addressing Mode Used</h2>
+					<pre><code>[class_marks + EBX + ESI*2]</code></pre>
+					<p>→ Based + Scaled Index + Displacement</p>
+					<ul>
+						<li>EBX: row offset (increases by row size)</li>
+						<li>ESI*2: fixed column offset (last column)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Key Takeaways</h2>
+					<ul>
+						<li>Assembly gives raw storage – you compute offsets</li>
+						<li>1D: simple scaled indexing</li>
+						<li>2D: row-major → (row × cols + col) × size</li>
+						<li>Use base + scaled index for clean code</li>
+						<li>Scale factors make array access efficient</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Practice Tip</h2>
+					<p>Always define constants:</p>
+					<pre><code>ROWS EQU 5
+COLS EQU 3
+ELEM_SIZE EQU 4
+ROW_BYTES EQU COLS * ELEM_SIZE</code></pre>
+					<p>Makes code readable and maintainable</p>
+				</section>
+			</section>
 
 
 
