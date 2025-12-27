@@ -6442,8 +6442,7 @@ done:
 					<div style="display: flex; gap: 50px;">
 						<!-- Left: C Code -->
 						<div style="flex: 1; padding: 10px; border-radius: 5px;">
-							<pre>
-int sum(int x, int y)
+							<pre><code>int sum(int x, int y)
 {
     int s;
     s = x + y;
@@ -6455,8 +6454,7 @@ int func()
     int r;
     r = sum(2, 5);
     return r;
-}
-      </pre>
+}</code></pre>
 						</div>
 
 						<!-- Right: Assembly Code -->
@@ -6479,12 +6477,19 @@ int func()
 
 func:
     push ebp
-    mov  ebp, esp
-    push 5
-    push 2
+    mov ebp, esp
+    sub esp, 4          ; allocate space for local int r (4 bytes)
+
+    push 5              ; second argument (y)
+    push 2              ; first argument (x)
     call sum
-    add  esp, 8
-    pop  ebp
+    add esp, 8          ; clean up arguments
+
+    mov [ebp-4], eax    ; store return value into r (local variable)
+
+    mov eax, [ebp-4]    ; load r back into eax for return
+    mov esp, ebp        ; deallocate local
+    pop ebp
     ret</code></pre>
 						</div>
 					</div>
