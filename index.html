@@ -6437,10 +6437,58 @@ done:
     ret
     </code></pre>
 				</section>
+				<section>
+					<h2>Sum Function: C vs Assembly</h2>
+					<div style="display: flex; gap: 50px;">
+						<!-- Left: C Code -->
+						<div style="flex: 1; padding: 10px; border-radius: 5px;">
+							<pre>
+int sum(int x, int y)
+{
+    int s;
+    s = x + y;
+    return s;
+}
+
+int func()
+{
+    int r;
+    r = sum(2, 5);
+    return r;
+}
+      </pre>
+						</div>
+
+						<!-- Right: Assembly Code -->
+						<div style="flex: 1; padding: 10px; border-radius: 5px;">
+							<pre><code>sum:
+    push ebp
+    mov ebp, esp
+    sub esp, 4          ; allocate local s
+
+    mov eax, [ebp+8]    ; eax = x
+    add eax, [ebp+12]   ; eax += y
+    mov [ebp-4], eax    ; store in s
+
+    mov eax, [ebp-4]    ; return s
+
+    mov esp, ebp        ; restore esp before return
+    pop ebp
+    ret
 
 
-
-
+func:
+    push ebp
+    mov  ebp, esp
+    push 5
+    push 2
+    call sum
+    add  esp, 8
+    pop  ebp
+    ret</code></pre>
+						</div>
+					</div>
+				</section>
 
 				<!-- Practice problems -->
 				<section>
