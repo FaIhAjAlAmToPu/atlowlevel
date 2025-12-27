@@ -6986,6 +6986,169 @@ ROW_BYTES EQU COLS * ELEM_SIZE</code></pre>
 				</section>
 			</section>
 
+			<section>
+				<!-- Slide 1: Title -->
+				<section>
+					<h2>Signed & Unsigned Multiplication and Division</h2>
+					<ul>
+						<li>Learn instructions for signed and unsigned multiplication</li>
+						<li>Learn instructions for signed and unsigned division</li>
+						<li>Practice multiplication & division on signed and unsigned numbers</li>
+					</ul>
+				</section>
+
+				<!-- Slide 2: Unsigned Multiplication -->
+				<section>
+					<h4>Unsigned Multiplication (MUL)</h4>
+					<ul>
+						<li>8-bit: AL * r/m8 → AX</li>
+						<li>16-bit: AX * r/m16 → DX:AX</li>
+						<li>32-bit: EAX * r/m32 → EDX:EAX</li>
+					</ul>
+					<pre><code>; 8-bit
+mov al, 10
+mov bl, 20
+mul bl         ; AX = 10*20 = 200
+
+; 16-bit
+mov ax, 300
+mov bx, 4
+mul bx         ; DX:AX = 1200
+
+; 32-bit
+mov eax, 100000
+mov ebx, 300
+mul ebx        ; EDX:EAX = 30000000
+  </code></pre>
+				</section>
+
+				<!-- Slide 3: Signed Multiplication -->
+				<section>
+					<h4>Signed Multiplication (IMUL)</h4>
+					<ul>
+						<li>8-bit: AL * r/m8 → AX</li>
+						<li>16-bit: AX * r/m16 → DX:AX</li>
+						<li>32-bit: EAX * r/m32 → EDX:EAX</li>
+					</ul>
+					<pre><code>; 8-bit
+mov al, -10
+mov bl, 20
+imul bl       ; AX = -200
+
+; 16-bit
+mov ax, -300
+mov bx, 4
+imul bx       ; DX:AX = -1200
+
+; 32-bit
+mov eax, -100000
+mov ebx, 300
+imul ebx      ; EDX:EAX = -30000000</code></pre>
+				</section>
+
+				<!-- Slide 4: Unsigned Division -->
+				<section>
+					<h4>Unsigned Division (DIV)</h4>
+					<ul style="font-size: 0.85em;">
+						<li>8-bit: AX ÷ r/m8 → AL = quotient, AH = remainder</li>
+						<li>16-bit: DX:AX ÷ r/m16 → AX = quotient, DX = remainder</li>
+						<li>32-bit: EDX:EAX ÷ r/m32 → EAX = quotient, EDX = remainder</li>
+					</ul>
+					<pre><code>; 8-bit
+mov ax, 200
+mov bl, 20
+div bl        ; AL = 10, AH = 0
+
+; 16-bit
+mov dx, 0
+mov ax, 1200
+mov bx, 4
+div bx        ; AX = 300, DX = 0
+
+; 32-bit
+mov edx, 0
+mov eax, 30000000
+mov ebx, 300
+div ebx       ; EAX = 100000, EDX = 0</code></pre>
+				</section>
+
+				<!-- Slide 5: Signed Division -->
+				<section>
+					<h4>Signed Division (IDIV)</h4>
+					<ul style="font-size: 0.85em;">
+						<li>8-bit: AX ÷ r/m8 → AL = quotient, AH = remainder</li>
+						<li>16-bit: DX:AX ÷ r/m16 → AX = quotient, DX = remainder</li>
+						<li>32-bit: EDX:EAX ÷ r/m32 → EAX = quotient, EDX = remainder</li>
+					</ul>
+					<pre><code>; 8-bit
+mov ax, -200
+idiv bl       ; AL = -10, AH = 0
+
+; 16-bit
+mov ax, -1200
+cwd           ; sign-extend AX → DX:AX
+mov bx, 4
+idiv bx       ; AX = -300, DX = 0
+
+; 32-bit
+mov eax, -30000000
+cdq           ; sign-extend EAX → EDX:EAX
+mov ebx, 300
+idiv ebx      ; EAX = -100000, EDX = 0
+  </code></pre>
+				</section>
+
+				<!-- Slide 6: Practice -->
+				<section>
+					<h3>Practice Problems</h3>
+					<ul>
+						<li>Unsigned multiply: 25 × 12 (8-bit)</li>
+						<li>Signed multiply: -15 × 10 (16-bit)</li>
+						<li>Unsigned divide: 200 ÷ 15 (8-bit)</li>
+						<li>Signed divide: -150 ÷ 12 (16-bit)</li>
+						<li>32-bit multiplication and division exercises</li>
+					</ul>
+				</section>
+
+				<!-- Slide 7: Summary Table -->
+				<section>
+					<h3>Summary: Registers & Instructions</h3>
+					<table border="1" cellpadding="5" style="font-size: 0.80em;">
+						<tr>
+							<th>Operation</th>
+							<th>8-bit</th>
+							<th>16-bit</th>
+							<th>32-bit</th>
+						</tr>
+						<tr>
+							<td>Unsigned Multiply</td>
+							<td>AL * r/m8 → AX</td>
+							<td>AX * r/m16 → DX:AX</td>
+							<td>EAX * r/m32 → EDX:EAX</td>
+						</tr>
+						<tr>
+							<td>Signed Multiply</td>
+							<td>AL * r/m8 → AX</td>
+							<td>AX * r/m16 → DX:AX</td>
+							<td>EAX * r/m32 → EDX:EAX</td>
+						</tr>
+						<tr>
+							<td>Unsigned Divide</td>
+							<td>AX ÷ r/m8 → AL=quot, AH=rem</td>
+							<td>DX:AX ÷ r/m16 → AX=quot, DX=rem</td>
+							<td>EDX:EAX ÷ r/m32 → EAX=quot, EDX=rem</td>
+						</tr>
+						<tr>
+							<td>Signed Divide</td>
+							<td>AX ÷ r/m8 → AL=quot, AH=rem</td>
+							<td>CWD → DX:AX ÷ r/m16 → AX=quot, DX=rem</td>
+							<td>CDQ → EDX:EAX ÷ r/m32 → EAX=quot, EDX=rem</td>
+						</tr>
+					</table>
+				</section>
+
+			</section>
+
 
 
 
