@@ -1,30 +1,18 @@
-<p align="center">
-  <a href="https://revealjs.com">
-  <img src="https://hakim-static.s3.amazonaws.com/reveal-js/logo/v1/reveal-black-text-sticker.png" alt="reveal.js" width="500">
-  </a>
-  <br><br>
-  <a href="https://github.com/hakimel/reveal.js/actions"><img src="https://github.com/hakimel/reveal.js/workflows/tests/badge.svg"></a>
-  <a href="https://slides.com/"><img src="https://static.slid.es/images/slides-github-banner-320x40.png?1" alt="Slides" width="160" height="20"></a>
-</p>
-
-reveal.js is an open source HTML presentation framework. It enables anyone with a web browser to create beautiful presentations for free. Check out the live demo at [revealjs.com](https://revealjs.com/).
-
-The framework comes with a powerful feature set including [nested slides](https://revealjs.com/vertical-slides/), [Markdown support](https://revealjs.com/markdown/), [Auto-Animate](https://revealjs.com/auto-animate/), [PDF export](https://revealjs.com/pdf-export/), [speaker notes](https://revealjs.com/speaker-view/), [LaTeX typesetting](https://revealjs.com/math/), [syntax highlighted code](https://revealjs.com/code/) and an [extensive API](https://revealjs.com/api/).
-
----
-
-Want to create reveal.js presentation in a graphical editor? Try <https://slides.com>. It's made by the same people behind reveal.js.
-
----
-
-### Getting started
-- 🚀 [Install reveal.js](https://revealjs.com/installation)
-- 👀 [View the demo presentation](https://revealjs.com/demo)
-- 📖 [Read the documentation](https://revealjs.com/markup/)
-- 🖌 [Try the visual editor for reveal.js at Slides.com](https://slides.com/)
-- 🎬 [Watch the reveal.js video course (paid)](https://revealjs.com/course)
-
---- 
-<div align="center">
-  MIT licensed | Copyright © 2011-2024 Hakim El Hattab, https://hakim.se
-</div>
+## Assembly in emu8086
+EMU-8086 is an emulator that simulates an Intel 8086 CPU with 1MB real mode memory, BIOS and DOS interrupts
+### DOS Interrupts
+DOS was a foundational and old operating system. DOS provides interrupts that program can use to do some special things. The most important one is **INT 21h**.
+#### INT 21h
+So think of **INT 21h** as a helper. You will say "Hey do this". The thing you want done is placed as a number at "ah" register.
+| AH (hex) | Function                      | Input Register(s)      | Output Register(s) |
+| -------- | ----------------------------- | ---------------------- | ------------------ |
+| 01h      | Read character (with echo)    | —                      | **AL**             |
+| 02h      | Display character             | **DL**                 | —                  |
+| 06h      | Direct console I/O            | **DL** (FFh = input)   | **AL**, ZF         |
+| 07h      | Read character (no echo)      | —                      | **AL**             |
+| 08h      | Read character (no echo)      | —                      | **AL**             |
+| 09h      | Display `$`-terminated string | **DS:DX**              | —                  |
+| 0Ah      | Buffered string input         | **DS:DX**              | Memory buffer      |
+| 0Bh      | Check keyboard status         | —                      | **AL**             |
+| 0Ch      | Clear input buffer + input    | **AL** (new fn), DS:DX | **AL**             |
+| 4Ch      | Terminate program             | **AL**                 | —                  |
